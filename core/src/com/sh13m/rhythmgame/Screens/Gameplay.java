@@ -33,6 +33,7 @@ public class Gameplay implements Screen {
 
     // textures
     private final Texture note_img;
+    private final Texture hold_bar_img;
     private final TextureRegion receptors_img;
     private final TextureRegion note_1;
     private final TextureRegion note_2;
@@ -75,6 +76,7 @@ public class Gameplay implements Screen {
 
         // set up textures
         note_img = new Texture(Gdx.files.internal("Graphics/notes.png"));
+        hold_bar_img = new Texture(Gdx.files.internal("Graphics/hold.png"));
         receptors_img = new TextureRegion(note_img,0,64,256,64);
         note_1 = new TextureRegion(note_img, 0,0,64,64);
         note_2 = new TextureRegion(note_img, 64,0,64,64);
@@ -140,6 +142,7 @@ public class Gameplay implements Screen {
     private void update(float delta) {
         handleInput();
         if (!sr.song_ended && START) sr.readMeasure(delta);
+        sr.addHoldBars(delta);
         updateNotes();
     }
 
@@ -168,7 +171,35 @@ public class Gameplay implements Screen {
     }
 
     private void updateNotes() {
+        // update tap notes
         for (Iterator<Rectangle> iter = sr.tap_notes.iterator(); iter.hasNext(); ) {
+            Rectangle note = iter.next();
+            note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            // remove notes if they fall off screen
+            if (note.y + 64 < 0) {
+                iter.remove();
+                combo = 0;
+            }
+            // remove notes if they are successfully hit
+            if (note.overlaps(receptor1) && Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+                iter.remove();
+                combo++;
+            }
+            if (note.overlaps(receptor2) && Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                iter.remove();
+                combo++;
+            }
+            if (note.overlaps(receptor3) && Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+                iter.remove();
+                combo++;
+            }
+            if (note.overlaps(receptor4) && Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+                iter.remove();
+                combo++;
+            }
+        }
+        // update hold note heads
+        for (Iterator<Rectangle> iter = sr.hold_notes_start.iterator(); iter.hasNext(); ) {
             Rectangle note = iter.next();
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
             if (note.y + 64 < 0) {
@@ -192,10 +223,38 @@ public class Gameplay implements Screen {
                 combo++;
             }
         }
+        // update hold bars
+        for (Iterator<Rectangle> iter = sr.hold_bars.iterator(); iter.hasNext(); ) {
+            Rectangle bar = iter.next();
+            bar.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (bar.y + 64 < 0) {
+                iter.remove();
+            }
+        }
+        // update hold note ends
+        for (Iterator<Rectangle> iter = sr.hold_notes_end.iterator(); iter.hasNext(); ) {
+            Rectangle end = iter.next();
+            end.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (end.y + 64 < 0) {
+                iter.remove();
+            }
+        }
     }
 
     private void drawNotes() {
+        // hold bars
+        for (Rectangle bar : sr.hold_bars) {
+            game.batch.draw(hold_bar_img, bar.x, bar.y);
+        }
+        // tap notes
         for (Rectangle note : sr.tap_notes) {
+            if (note.x == RhythmGame.V_WIDTH / 2 - 128) game.batch.draw(note_1, note.x, note.y);
+            else if (note.x == RhythmGame.V_WIDTH / 2 - 64) game.batch.draw(note_2, note.x, note.y);
+            else if (note.x == RhythmGame.V_WIDTH / 2) game.batch.draw(note_3, note.x, note.y);
+            else if (note.x == RhythmGame.V_WIDTH / 2 + 64) game.batch.draw(note_4, note.x, note.y);
+        }
+        // hold note heads
+        for (Rectangle note : sr.hold_notes_start) {
             if (note.x == RhythmGame.V_WIDTH / 2 - 128) game.batch.draw(note_1, note.x, note.y);
             else if (note.x == RhythmGame.V_WIDTH / 2 - 64) game.batch.draw(note_2, note.x, note.y);
             else if (note.x == RhythmGame.V_WIDTH / 2) game.batch.draw(note_3, note.x, note.y);
@@ -226,6 +285,7 @@ public class Gameplay implements Screen {
     @Override
     public void dispose() {
         note_img.dispose();
+        hold_bar_img.dispose();
         pm.dispose();
         cursor.dispose();
         music.dispose();

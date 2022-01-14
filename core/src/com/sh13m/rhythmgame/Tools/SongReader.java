@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.sh13m.rhythmgame.RhythmGame;
 
 public class SongReader {
+    private static final float HOLD_BAR_TIME_INCREMENT = 0.01f;
+
     private final FileHandle song_file;
     private final String[] file_lines;
 
@@ -17,39 +19,54 @@ public class SongReader {
     private float time_since_start;
     private float increment_time;
     private float measure_time;
+    private float time_since_last_bar;
 
     private boolean first_notes_created;
     private boolean measure_parsed;
     public boolean song_ended;
+    public boolean col1_held;
+    public boolean col2_held;
+    public boolean col3_held;
+    public boolean col4_held;
 
     private int current_line;
     private int current_measure_position;
 
     private Array<Character> col1, col2, col3, col4;
     public Array<Rectangle> tap_notes;
-    public Array<Rectangle> hold_notes;
+    public Array<Rectangle> hold_notes_start;
+    public Array<Rectangle> hold_bars;
+    public Array<Rectangle> hold_notes_end;
 
     public SongReader() {
         song_file = Gdx.files.internal("Songs/der wald (Wh1teh)/derwald.sm");
         file_lines = song_file.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
-        bpm = 170;
-        //getBPM();
+        getBPM();
 
         tap_notes = new Array<>();
-        hold_notes = new Array<>();
+        hold_notes_start = new Array<>();
+        hold_bars = new Array<>();
+        hold_notes_end = new Array<>();
         col1 = new Array<>();
         col2 = new Array<>();
         col3 = new Array<>();
         col4 = new Array<>();
 
+        col1_held = false;
+        col2_held = false;
+        col3_held = false;
+        col4_held = false;
+
         first_notes_created = false;
         measure_parsed = false;
         song_ended = false;
+
         measure_time = 1/(bpm / 60 / 4);
         current_measure_position = 0;
         time_since_start = 0;
+        time_since_last_bar = 0;
         note_type = 0;
     }
 
@@ -96,24 +113,64 @@ public class SongReader {
     }
 
     private void addNotes() {
-        if (col1.get(current_measure_position).equals('1')) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 480,64,64);
-            tap_notes.add(note);
-        }
-        if (col2.get(current_measure_position).equals('1')) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 480,64,64);
-            tap_notes.add(note);
-        }
-        if (col3.get(current_measure_position).equals('1')) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2, 480,64,64);
-            tap_notes.add(note);
-        }
-        if (col4.get(current_measure_position).equals('1')) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 480,64,64);
-            tap_notes.add(note);
-        }
-        System.out.println();
+        // create tap notes
+        createNotes('1', tap_notes);
+        // create hold notes
+        createNotes('2', hold_notes_start);
+        createNotes('3', hold_notes_end);
         current_measure_position++;
+    }
+
+    private void createNotes(char n, Array<Rectangle> arr) {
+        // creates an adds a note to its corresponding array
+        if (col1.get(current_measure_position).equals(n)) {
+            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 480,64,64);
+            arr.add(note);
+            if (n == '2' || n == '4') col1_held = true;
+            if (n == '3') col1_held = false;
+        }
+        if (col2.get(current_measure_position).equals(n)) {
+            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 480,64,64);
+            arr.add(note);
+            if (n == '2' || n == '4') col2_held = true;
+            if (n == '3') col2_held = false;
+        }
+        if (col3.get(current_measure_position).equals(n)) {
+            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2, 480,64,64);
+            arr.add(note);
+            if (n == '2' || n == '4') col3_held = true;
+            if (n == '3') col3_held = false;
+        }
+        if (col4.get(current_measure_position).equals(n)) {
+            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 480,64,64);
+            arr.add(note);
+            if (n == '2' || n == '4') col4_held = true;
+            if (n == '3') col4_held = false;
+        }
+    }
+
+    public void addHoldBars(float delta) {
+        time_since_last_bar += delta;
+        if (time_since_last_bar >= HOLD_BAR_TIME_INCREMENT) {
+            if (col1_held) {
+                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 512,64,24);
+                hold_bars.add(bar);
+            }
+            if (col2_held) {
+                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 512,64,24);
+                hold_bars.add(bar);
+            }
+            if (col3_held) {
+                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2, 512,64,24);
+                hold_bars.add(bar);
+            }
+            if (col4_held) {
+                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 512,64,24);
+                hold_bars.add(bar);
+            }
+            time_since_last_bar = 0;
+        }
+
     }
 
     private void getNoteDataStart() {
@@ -136,10 +193,15 @@ public class SongReader {
         }
     }
 
-    private void getBPM() { // only works with maps with constant bpm right now
+    private void getBPM() { // only works with maps with constant bpm currently
         for (String line : file_lines) {
             if (line.contains("#BPMS:")) {
-                bpm = Float.parseFloat(line.substring(8, line.length()-1));
+                char a = 0;
+                while (a != '=') {
+                    a = line.charAt(0);
+                    line = new StringBuilder(line).deleteCharAt(0).toString();
+                }
+                bpm = Float.parseFloat(line.substring(0, line.length()-1));
                 break;
             }
         }
