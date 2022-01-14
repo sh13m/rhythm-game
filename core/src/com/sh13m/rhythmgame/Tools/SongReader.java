@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.sh13m.rhythmgame.RhythmGame;
 
 public class SongReader {
-    private FileHandle song_file;
-    private String[] file_lines;
+    private final FileHandle song_file;
+    private final String[] file_lines;
 
     public float offset;
     private float bpm;
@@ -26,10 +26,7 @@ public class SongReader {
     private int current_measure_position;
 
     private Array<Character> col1, col2, col3, col4;
-    public Array<Rectangle> notes_col_1;
-    public Array<Rectangle> notes_col_2;
-    public Array<Rectangle> notes_col_3;
-    public Array<Rectangle> notes_col_4;
+    public Array<Rectangle> tap_notes;
 
     public SongReader() {
         song_file = Gdx.files.internal("Songs/death waltz (Wh1teh)/deathwaltz.sm");
@@ -38,10 +35,7 @@ public class SongReader {
         getOffset();
         getBPM();
 
-        notes_col_1 = new Array<>();
-        notes_col_2 = new Array<>();
-        notes_col_3 = new Array<>();
-        notes_col_4 = new Array<>();
+        tap_notes = new Array<>();
         col1 = new Array<>();
         col2 = new Array<>();
         col3 = new Array<>();
@@ -101,19 +95,19 @@ public class SongReader {
     private void addNotes() {
         if (col1.get(current_measure_position).equals('1')) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 480,64,64);
-            notes_col_1.add(note);
+            tap_notes.add(note);
         }
         if (col2.get(current_measure_position).equals('1')) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 480,64,64);
-            notes_col_2.add(note);
+            tap_notes.add(note);
         }
         if (col3.get(current_measure_position).equals('1')) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2, 480,64,64);
-            notes_col_3.add(note);
+            tap_notes.add(note);
         }
         if (col4.get(current_measure_position).equals('1')) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 480,64,64);
-            notes_col_4.add(note);
+            tap_notes.add(note);
         }
         System.out.println();
         current_measure_position++;

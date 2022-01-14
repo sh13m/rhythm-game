@@ -166,7 +166,7 @@ public class Gameplay implements Screen {
     }
 
     private void updateNotes() {
-        for (Iterator<Rectangle> iter = sr.notes_col_1.iterator(); iter.hasNext(); ) {
+        for (Iterator<Rectangle> iter = sr.tap_notes.iterator(); iter.hasNext(); ) {
             Rectangle note = iter.next();
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
             if (note.y + 64 < 0) {
@@ -177,37 +177,13 @@ public class Gameplay implements Screen {
                 iter.remove();
                 combo++;
             }
-        }
-        for (Iterator<Rectangle> iter = sr.notes_col_2.iterator(); iter.hasNext(); ) {
-            Rectangle note = iter.next();
-            note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (note.y + 64 < 0) {
-                iter.remove();
-                combo = 0;
-            }
             if (note.overlaps(receptor2) && Gdx.input.isKeyJustPressed(Input.Keys.F)) {
                 iter.remove();
                 combo++;
             }
-        }
-        for (Iterator<Rectangle> iter = sr.notes_col_3.iterator(); iter.hasNext(); ) {
-            Rectangle note = iter.next();
-            note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (note.y + 64 < 0) {
-                iter.remove();
-                combo = 0;
-            }
             if (note.overlaps(receptor3) && Gdx.input.isKeyJustPressed(Input.Keys.J)) {
                 iter.remove();
                 combo++;
-            }
-        }
-        for (Iterator<Rectangle> iter = sr.notes_col_4.iterator(); iter.hasNext(); ) {
-            Rectangle note = iter.next();
-            note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (note.y + 64 < 0) {
-                iter.remove();
-                combo = 0;
             }
             if (note.overlaps(receptor4) && Gdx.input.isKeyJustPressed(Input.Keys.K)) {
                 iter.remove();
@@ -217,17 +193,11 @@ public class Gameplay implements Screen {
     }
 
     private void drawNotes() {
-        for (Rectangle note : sr.notes_col_1) {
-            game.batch.draw(note_1, note.x, note.y);
-        }
-        for (Rectangle note : sr.notes_col_2) {
-            game.batch.draw(note_2, note.x, note.y);
-        }
-        for (Rectangle note : sr.notes_col_3) {
-            game.batch.draw(note_3, note.x, note.y);
-        }
-        for (Rectangle note : sr.notes_col_4) {
-            game.batch.draw(note_4, note.x, note.y);
+        for (Rectangle note : sr.tap_notes) {
+            if (note.x == RhythmGame.V_WIDTH / 2 - 128) game.batch.draw(note_1, note.x, note.y);
+            else if (note.x == RhythmGame.V_WIDTH / 2 - 64) game.batch.draw(note_2, note.x, note.y);
+            else if (note.x == RhythmGame.V_WIDTH / 2) game.batch.draw(note_3, note.x, note.y);
+            else if (note.x == RhythmGame.V_WIDTH / 2 + 64) game.batch.draw(note_4, note.x, note.y);
         }
     }
 
