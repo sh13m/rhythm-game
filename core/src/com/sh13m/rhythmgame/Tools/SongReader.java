@@ -27,15 +27,18 @@ public class SongReader {
 
     private Array<Character> col1, col2, col3, col4;
     public Array<Rectangle> tap_notes;
+    public Array<Rectangle> hold_notes;
 
     public SongReader() {
-        song_file = Gdx.files.internal("Songs/death waltz (Wh1teh)/deathwaltz.sm");
+        song_file = Gdx.files.internal("Songs/der wald (Wh1teh)/derwald.sm");
         file_lines = song_file.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
-        getBPM();
+        bpm = 170;
+        //getBPM();
 
         tap_notes = new Array<>();
+        hold_notes = new Array<>();
         col1 = new Array<>();
         col2 = new Array<>();
         col3 = new Array<>();

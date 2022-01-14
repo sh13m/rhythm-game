@@ -57,6 +57,8 @@ public class Gameplay implements Screen {
 
     // temp other
     private int combo;
+    private Timer delayedMusicStart;
+    private Timer delayedNoteStart;
 
 
     public Gameplay(RhythmGame game) {
@@ -91,16 +93,16 @@ public class Gameplay implements Screen {
         receptor4 = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, R_HEIGHT,64,64);
 
         // set up song data
-        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/death waltz (Wh1teh)/audio.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/der wald (Wh1teh)/audio.mp3"));
         sr = new SongReader();
-        Timer delayedMusicStart = new Timer();
+        delayedMusicStart = new Timer();
         delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 music.play();
             }
         }, GLOBAL_DELAY + sr.offset);
-        Timer delayedNoteStart = new Timer();
+        delayedNoteStart = new Timer();
         delayedNoteStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
@@ -228,5 +230,7 @@ public class Gameplay implements Screen {
         cursor.dispose();
         music.dispose();
         stage.dispose();
+        delayedMusicStart.clear();
+        delayedNoteStart.clear();
     }
 }
