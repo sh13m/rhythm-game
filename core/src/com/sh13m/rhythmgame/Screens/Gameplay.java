@@ -151,7 +151,7 @@ public class Gameplay implements Screen {
 
     private void update(float delta) {
         handleInput();
-        if (!sr.song_ended && START) sr.readMeasure(delta);
+        if (!sr.songEnded && START) sr.readMeasure(delta);
         sr.addHoldBars(delta);
         updateNotes();
     }
@@ -214,30 +214,22 @@ public class Gameplay implements Screen {
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
             if (note.y + 64 < 0) {
                 iter.remove();
-                if (note.x == COL1_X) sr.col1_hold_missed = true;
-                if (note.x == COL2_X) sr.col2_hold_missed = true;
-                if (note.x == COL3_X) sr.col3_hold_missed = true;
-                if (note.x == COL4_X) sr.col4_hold_missed = true;
                 combo = 0;
             }
             if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
                 iter.remove();
-                sr.col1_hold_missed = false;
                 combo++;
             }
             if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
                 iter.remove();
-                sr.col2_hold_missed = false;
                 combo++;
             }
             if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
                 iter.remove();
-                sr.col3_hold_missed = false;
                 combo++;
             }
             if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
                 iter.remove();
-                sr.col4_hold_missed = false;
                 combo++;
             }
         }
@@ -245,17 +237,7 @@ public class Gameplay implements Screen {
         for (Iterator<Rectangle> iter = sr.hold_bars.iterator(); iter.hasNext(); ) {
             Rectangle bar = iter.next();
             bar.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (bar.y + 64 < 0) {
-                iter.remove();            }
-            if (SongInput.receptor1Pressed() && !sr.col1_hold_missed && bar.x == COL1_X && bar.y - 20 < R_HEIGHT) iter.remove();
-            if (SongInput.receptor2Pressed() && !sr.col2_hold_missed && bar.x == COL2_X && bar.y - 20 < R_HEIGHT) iter.remove();
-            if (SongInput.receptor3Pressed() && !sr.col3_hold_missed && bar.x == COL3_X && bar.y - 20 < R_HEIGHT) iter.remove();
-            if (SongInput.receptor4Pressed() && !sr.col4_hold_missed && bar.x == COL4_X && bar.y - 20 < R_HEIGHT) iter.remove();
-            // let go
-            if (!SongInput.receptor1Pressed() && !sr.col1_hold_missed && bar.x == COL1_X) sr.col1_hold_missed = true;
-            if (!SongInput.receptor2Pressed() && !sr.col2_hold_missed && bar.x == COL2_X) sr.col1_hold_missed = true;
-            if (!SongInput.receptor3Pressed() && !sr.col3_hold_missed && bar.x == COL3_X) sr.col1_hold_missed = true;
-            if (!SongInput.receptor4Pressed() && !sr.col4_hold_missed && bar.x == COL4_X) sr.col1_hold_missed = true;
+            if (bar.y + 64 < 0) iter.remove();
 
         }
     }

@@ -8,35 +8,35 @@ import com.sh13m.rhythmgame.Screens.Gameplay;
 
 // not all features of the sm file are implemented in this game
 public class SongReader {
-    private static final float HOLD_BAR_TIME_INCREMENT = 10f / Gameplay.SCROLL_SPEED;
+    private static final float HOLD_BAR_TIME_INCREMENT = 5f / Gameplay.SCROLL_SPEED;
 
-    private final FileHandle song_file;
-    private final String[] file_lines;
+    private final FileHandle songFile;
+    private final String[] fileLines;
 
     public float offset;
     private float bpm;
-    private int note_type;
+    private int noteType;
 
-    private float time_since_start;
-    private float increment_time;
-    private float measure_time;
-    private float time_since_last_bar;
+    private float timeSinceStart;
+    private float incrementTime;
+    private float measureTime;
+    private float timeSinceLastBar;
 
-    private boolean first_notes_created;
-    private boolean measure_parsed;
-    public boolean song_ended;
+    private boolean firstNotesCreated;
+    private boolean measureParsed;
+    public boolean songEnded;
 
-    public boolean col1_held;
-    public boolean col2_held;
-    public boolean col3_held;
-    public boolean col4_held;
+    public boolean isDrawingCol1Bar;
+    public boolean isDrawingCol2Bar;
+    public boolean isDrawingCol3Bar;
+    public boolean isDrawingCol4Bar;
     public boolean col1_hold_missed;
     public boolean col2_hold_missed;
     public boolean col3_hold_missed;
     public boolean col4_hold_missed;
 
-    private int current_line;
-    private int current_measure_position;
+    private int currentLine;
+    private int currentMeasurePosition;
 
     private Array<Character> col1, col2, col3, col4;
     public Array<Rectangle> tap_notes;
@@ -44,8 +44,8 @@ public class SongReader {
     public Array<Rectangle> hold_bars;
 
     public SongReader() {
-        song_file = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
-        file_lines = song_file.readString().split("\\r?\\n");
+        songFile = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
+        fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
         getBPM();
@@ -58,63 +58,64 @@ public class SongReader {
         col3 = new Array<>();
         col4 = new Array<>();
 
-        col1_held = false;
-        col2_held = false;
-        col3_held = false;
-        col4_held = false;
+        isDrawingCol1Bar = false;
+        isDrawingCol2Bar = false;
+        isDrawingCol3Bar = false;
+        isDrawingCol4Bar = false;
 
+        firstNotesCreated = false;
+        measureParsed = false;
+        songEnded = false;
 
-        first_notes_created = false;
-        measure_parsed = false;
-        song_ended = false;
-
-        measure_time = 1/(bpm / 60 / 4);
-        current_measure_position = 0;
-        time_since_start = 0;
-        time_since_last_bar = 0;
-        note_type = 0;
+        measureTime = 1/(bpm / 60 / 4);
+        currentMeasurePosition = 0;
+        timeSinceStart = 0;
+        timeSinceLastBar = 0;
+        noteType = 0;
     }
 
-    private void parseMeasure() { // 192 NOTE TYPES SEEM TO BE WEIRD RN HOLD NOTES ARE REALLY BROKEN
-        note_type = 0;
+    // 192 NOTE TYPES SEEM TO BE WEIRD RN HOLD NOTES ARE REALLY BROKEN
+    // Some hold note heads just aren't drawing???
+    private void parseMeasure() {
+        noteType = 0;
         col1.setSize(0);
         col2.setSize(0);
         col3.setSize(0);
         col4.setSize(0);
         while (true) {
-            if (file_lines[current_line].equals(",") || file_lines[current_line].equals(";")) {
-                if (file_lines[current_line].equals(";")) song_ended = true;
-                current_line++;
+            if (fileLines[currentLine].equals(",") || fileLines[currentLine].equals(";")) {
+                if (fileLines[currentLine].equals(";")) songEnded = true;
+                currentLine++;
                 break;
             }
-            note_type++;
-            col1.add(file_lines[current_line].charAt(0));
-            col2.add(file_lines[current_line].charAt(1));
-            col3.add(file_lines[current_line].charAt(2));
-            col4.add(file_lines[current_line].charAt(3));
-            current_line++;
+            noteType++;
+            col1.add(fileLines[currentLine].charAt(0));
+            col2.add(fileLines[currentLine].charAt(1));
+            col3.add(fileLines[currentLine].charAt(2));
+            col4.add(fileLines[currentLine].charAt(3));
+            currentLine++;
         }
-        System.out.println(note_type); // DEBUGGING
-        increment_time = measure_time / note_type;
+        incrementTime = measureTime / noteType;
+        System.out.println(noteType + " " + incrementTime); // DEBUGGING
     }
 
     public void readMeasure(float delta) {
-        time_since_start += delta;
-        if (!measure_parsed) {
+        timeSinceStart += delta;
+        if (!measureParsed) {
             parseMeasure();
-            measure_parsed = true;
+            measureParsed = true;
         }
-        if (!first_notes_created) {
+        if (!firstNotesCreated) {
             addNotes();
-            first_notes_created = true;
+            firstNotesCreated = true;
         }
-        if (time_since_start >= increment_time) {
+        if (timeSinceStart >= incrementTime) {
             addNotes();
-            time_since_start -= increment_time;
+            timeSinceStart -= incrementTime;
         }
-        if (current_measure_position == note_type) {
-            measure_parsed = false;
-            current_measure_position = 0;
+        if (currentMeasurePosition == noteType) {
+            measureParsed = false;
+            currentMeasurePosition = 0;
         }
     }
 
@@ -124,89 +125,84 @@ public class SongReader {
         // create hold notes
         createNotes('2', hold_notes_start);
         createHoldEnds('3');
-        current_measure_position++;
+        currentMeasurePosition++;
     }
 
     private void createNotes(char n, Array<Rectangle> arr) {
         // creates an adds a note to its corresponding array
-        if (col1.get(current_measure_position).equals(n)) {
+        if (col1.get(currentMeasurePosition).equals(n)) {
             Rectangle note = new Rectangle(Gameplay.COL1_X, 480,64,64);
             arr.add(note);
-            if (n == '2' || n == '4') col1_held = true;
+            if (n == '2' || n == '4') isDrawingCol1Bar = true;
         }
-        if (col2.get(current_measure_position).equals(n)) {
+        if (col2.get(currentMeasurePosition).equals(n)) {
             Rectangle note = new Rectangle(Gameplay.COL2_X, 480,64,64);
             arr.add(note);
-            if (n == '2' || n == '4') col2_held = true;
+            if (n == '2' || n == '4') isDrawingCol2Bar = true;
         }
-        if (col3.get(current_measure_position).equals(n)) {
+        if (col3.get(currentMeasurePosition).equals(n)) {
             Rectangle note = new Rectangle(Gameplay.COL3_X, 480,64,64);
             arr.add(note);
-            if (n == '2' || n == '4') col3_held = true;
+            if (n == '2' || n == '4') isDrawingCol3Bar = true;
         }
-        if (col4.get(current_measure_position).equals(n)) {
+        if (col4.get(currentMeasurePosition).equals(n)) {
             Rectangle note = new Rectangle(Gameplay.COL4_X, 480,64,64);
             arr.add(note);
-            if (n == '2' || n == '4') col4_held = true;
+            if (n == '2' || n == '4') isDrawingCol4Bar = true;
         }
     }
 
     private void createHoldEnds(char n) {
-        if (col1.get(current_measure_position).equals(n)) {
-            col1_held = false;
-            col1_hold_missed = true;
+        if (col1.get(currentMeasurePosition).equals(n)) {
+            isDrawingCol1Bar = false;
         }
-        if (col2.get(current_measure_position).equals(n)) {
-            col2_held = false;
-            col2_hold_missed = true;
+        if (col2.get(currentMeasurePosition).equals(n)) {
+            isDrawingCol2Bar = false;
         }
-        if (col3.get(current_measure_position).equals(n)) {
-            col3_held = false;
-            col3_hold_missed = true;
+        if (col3.get(currentMeasurePosition).equals(n)) {
+            isDrawingCol3Bar = false;
         }
-        if (col4.get(current_measure_position).equals(n)) {
-            col4_held = false;
-            col4_hold_missed = true;
+        if (col4.get(currentMeasurePosition).equals(n)) {
+            isDrawingCol4Bar = false;
         }
     }
 
     public void addHoldBars(float delta) {
-        time_since_last_bar += delta;
-        if (time_since_last_bar >= HOLD_BAR_TIME_INCREMENT) {
-            if (col1_held) {
-                Rectangle bar = new Rectangle(Gameplay.COL1_X, 512,64,24);
+        timeSinceLastBar += delta;
+        if (timeSinceLastBar >= HOLD_BAR_TIME_INCREMENT) {
+            if (isDrawingCol1Bar) {
+                Rectangle bar = new Rectangle(Gameplay.COL1_X, 512,64,16);
                 hold_bars.add(bar);
             }
-            if (col2_held) {
-                Rectangle bar = new Rectangle(Gameplay.COL2_X, 512,64,24);
+            if (isDrawingCol2Bar) {
+                Rectangle bar = new Rectangle(Gameplay.COL2_X, 512,64,16);
                 hold_bars.add(bar);
             }
-            if (col3_held) {
-                Rectangle bar = new Rectangle(Gameplay.COL3_X, 512,64,24);
+            if (isDrawingCol3Bar) {
+                Rectangle bar = new Rectangle(Gameplay.COL3_X, 512,64,16);
                 hold_bars.add(bar);
             }
-            if (col4_held) {
-                Rectangle bar = new Rectangle(Gameplay.COL4_X, 512,64,24);
+            if (isDrawingCol4Bar) {
+                Rectangle bar = new Rectangle(Gameplay.COL4_X, 512,64,16);
                 hold_bars.add(bar);
             }
-            time_since_last_bar = 0;
+            timeSinceLastBar = 0;
         }
-
     }
 
     private void getNoteDataStart() {
-        for (int i=0; i < file_lines.length; i++) {
-            if (file_lines[i].length() == 4
-                    && (file_lines[i].charAt(file_lines[i].length() - 1) != ';'
-                    || file_lines[i].charAt(file_lines[i].length() - 1) != ':')) {
-                current_line = i;
+        for (int i = 0; i < fileLines.length; i++) {
+            if (fileLines[i].length() == 4
+                    && (fileLines[i].charAt(fileLines[i].length() - 1) != ';'
+                    || fileLines[i].charAt(fileLines[i].length() - 1) != ':')) {
+                currentLine = i;
                 break;
             }
         }
     }
 
     private void getOffset() {
-        for (String line : file_lines) {
+        for (String line : fileLines) {
             if (line.contains("#OFFSET:")) {
                 offset = Float.parseFloat(line.substring(8, line.length()-1));
                 break;
@@ -215,7 +211,7 @@ public class SongReader {
     }
 
     private void getBPM() { // only works with maps with constant bpm currently
-        for (String line : file_lines) {
+        for (String line : fileLines) {
             if (line.contains("#BPMS:")) {
                 char a = 0;
                 while (a != '=') {
