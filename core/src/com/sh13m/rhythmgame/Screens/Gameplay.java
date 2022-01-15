@@ -96,6 +96,7 @@ public class Gameplay implements Screen {
 
         // set up song data
         music = Gdx.audio.newMusic(Gdx.files.internal("Songs/der wald (Wh1teh)/audio.mp3"));
+        music.setVolume(0.5f);
         sr = new SongReader();
         delayedMusicStart = new Timer();
         delayedMusicStart.scheduleTask(new Timer.Task() {

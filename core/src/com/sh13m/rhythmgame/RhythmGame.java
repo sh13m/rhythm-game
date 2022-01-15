@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,6 +23,7 @@ public class RhythmGame extends Game {
 	public BitmapFont ltext;
 
 	public Music menuTheme;
+	public Sound click;
 
 	@Override
 	public void create() {
@@ -38,8 +40,9 @@ public class RhythmGame extends Game {
 				false);
 		ltext = new BitmapFont();
 		ltext.getData().setScale(0.7f);
-
+		click = Gdx.audio.newSound(Gdx.files.internal("SFX/click.ogg"));
 		menuTheme = Gdx.audio.newMusic(Gdx.files.internal("SFX/Music title (loop).ogg"));
+		menuTheme.setVolume(0.5f);
 		menuTheme.setLooping(true);
 		menuTheme.play();
 
@@ -76,5 +79,6 @@ public class RhythmGame extends Game {
 		font.dispose();
 		ltext.dispose();
 		menuTheme.dispose();
+		click.dispose();
 	}
 }

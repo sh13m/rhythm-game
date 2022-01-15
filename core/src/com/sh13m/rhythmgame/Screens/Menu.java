@@ -3,7 +3,6 @@ package com.sh13m.rhythmgame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +19,6 @@ public class Menu implements Screen {
 
     // assets
     private final Texture logo;
-    private final Sound click;
     private float timeSinceClick;
     private boolean selected;
 
@@ -31,7 +29,6 @@ public class Menu implements Screen {
 
         // set up assets
         logo = new Texture("Graphics/logo.png");
-        click = Gdx.audio.newSound(Gdx.files.internal("SFX/click.ogg"));
         timeSinceClick = 0;
         selected = false;
 
@@ -75,18 +72,18 @@ public class Menu implements Screen {
     private void handleInput() {
         // cycles through selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && !selected) {
-            click.play();
+            game.click.play(0.5f);
             selection++;
             if (selection > 3) selection = 0;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !selected) {
-            click.play();
+            game.click.play(0.5f);
             selection--;
             if (selection < 0) selection = 3;
         }
         // runs selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !selected) {
-            click.play();
+            game.click.play(0.5f);
             selected = true;
         }
     }
@@ -167,6 +164,5 @@ public class Menu implements Screen {
     @Override
     public void dispose() {
         logo.dispose();
-        click.dispose();
     }
 }

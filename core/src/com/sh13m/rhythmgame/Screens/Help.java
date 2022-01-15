@@ -50,6 +50,7 @@ public class Help implements Screen {
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.click.play(0.5f);
             game.setScreen(new Menu(game));
             dispose();
         }
