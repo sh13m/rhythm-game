@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.sh13m.rhythmgame.RhythmGame;
+import com.sh13m.rhythmgame.Screens.Gameplay;
 
+// not all features of the sm file are implemented in this game
 public class SongReader {
-    private static final float HOLD_BAR_TIME_INCREMENT = 0.01f;
+    private static final float HOLD_BAR_TIME_INCREMENT = 10f / Gameplay.SCROLL_SPEED;
 
     private final FileHandle song_file;
     private final String[] file_lines;
@@ -41,10 +42,9 @@ public class SongReader {
     public Array<Rectangle> tap_notes;
     public Array<Rectangle> hold_notes_start;
     public Array<Rectangle> hold_bars;
-    public Array<Rectangle> hold_notes_end;
 
     public SongReader() {
-        song_file = Gdx.files.internal("Songs/der wald (Wh1teh)/derwald.sm");
+        song_file = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
         file_lines = song_file.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
@@ -53,7 +53,6 @@ public class SongReader {
         tap_notes = new Array<>();
         hold_notes_start = new Array<>();
         hold_bars = new Array<>();
-        hold_notes_end = new Array<>();
         col1 = new Array<>();
         col2 = new Array<>();
         col3 = new Array<>();
@@ -76,7 +75,7 @@ public class SongReader {
         note_type = 0;
     }
 
-    private void parseMeasure() {
+    private void parseMeasure() { // 192 NOTE TYPES SEEM TO BE WEIRD RN HOLD NOTES ARE REALLY BROKEN
         note_type = 0;
         col1.setSize(0);
         col2.setSize(0);
@@ -95,6 +94,7 @@ public class SongReader {
             col4.add(file_lines[current_line].charAt(3));
             current_line++;
         }
+        System.out.println(note_type); // DEBUGGING
         increment_time = measure_time / note_type;
     }
 
@@ -123,47 +123,50 @@ public class SongReader {
         createNotes('1', tap_notes);
         // create hold notes
         createNotes('2', hold_notes_start);
-        createNotes('3', hold_notes_end);
+        createHoldEnds('3');
         current_measure_position++;
     }
 
     private void createNotes(char n, Array<Rectangle> arr) {
         // creates an adds a note to its corresponding array
         if (col1.get(current_measure_position).equals(n)) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 480,64,64);
+            Rectangle note = new Rectangle(Gameplay.COL1_X, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col1_held = true;
-            if (n == '3') {
-                col1_held = false;
-                col1_hold_missed = false;
-            }
         }
         if (col2.get(current_measure_position).equals(n)) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 480,64,64);
+            Rectangle note = new Rectangle(Gameplay.COL2_X, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col2_held = true;
-            if (n == '3') {
-                col2_held = false;
-                col2_hold_missed = false;
-            }
         }
         if (col3.get(current_measure_position).equals(n)) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2, 480,64,64);
+            Rectangle note = new Rectangle(Gameplay.COL3_X, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col3_held = true;
-            if (n == '3') {
-                col3_held = false;
-                col3_hold_missed = false;
-            }
         }
         if (col4.get(current_measure_position).equals(n)) {
-            Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 480,64,64);
+            Rectangle note = new Rectangle(Gameplay.COL4_X, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col4_held = true;
-            if (n == '3') {
-                col4_held = false;
-                col4_hold_missed = false;
-            }
+        }
+    }
+
+    private void createHoldEnds(char n) {
+        if (col1.get(current_measure_position).equals(n)) {
+            col1_held = false;
+            col1_hold_missed = true;
+        }
+        if (col2.get(current_measure_position).equals(n)) {
+            col2_held = false;
+            col2_hold_missed = true;
+        }
+        if (col3.get(current_measure_position).equals(n)) {
+            col3_held = false;
+            col3_hold_missed = true;
+        }
+        if (col4.get(current_measure_position).equals(n)) {
+            col4_held = false;
+            col4_hold_missed = true;
         }
     }
 
@@ -171,19 +174,19 @@ public class SongReader {
         time_since_last_bar += delta;
         if (time_since_last_bar >= HOLD_BAR_TIME_INCREMENT) {
             if (col1_held) {
-                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 512,64,24);
+                Rectangle bar = new Rectangle(Gameplay.COL1_X, 512,64,24);
                 hold_bars.add(bar);
             }
             if (col2_held) {
-                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 512,64,24);
+                Rectangle bar = new Rectangle(Gameplay.COL2_X, 512,64,24);
                 hold_bars.add(bar);
             }
             if (col3_held) {
-                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2, 512,64,24);
+                Rectangle bar = new Rectangle(Gameplay.COL3_X, 512,64,24);
                 hold_bars.add(bar);
             }
             if (col4_held) {
-                Rectangle bar = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 512,64,24);
+                Rectangle bar = new Rectangle(Gameplay.COL4_X, 512,64,24);
                 hold_bars.add(bar);
             }
             time_since_last_bar = 0;

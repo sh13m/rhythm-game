@@ -20,10 +20,14 @@ import java.util.Iterator;
 public class Gameplay implements Screen {
     // gameplay settings
     private static final int R_HEIGHT = 30;
-    private static final int C_HEIGHT = 300;
-    private static final int SCROLL_SPEED = 900;
+    private static final int COMBO_HEIGHT = 300;
+    public static final int SCROLL_SPEED = 900;
     private static final float GLOBAL_DELAY = 3;
     private static final float SCROLL_OFFSET = (480f - R_HEIGHT) / SCROLL_SPEED;
+    public static float COL1_X = RhythmGame.V_WIDTH / 2 - 128;
+    public static float COL2_X = RhythmGame.V_WIDTH / 2 - 64;
+    public static float COL3_X = RhythmGame.V_WIDTH / 2;
+    public static float COL4_X = RhythmGame.V_WIDTH / 2 + 64;
 
     // render
     private final RhythmGame game;
@@ -48,20 +52,20 @@ public class Gameplay implements Screen {
     private final Texture bg;
 
     // rectangles
-    private Rectangle receptor1;
-    private Rectangle receptor2;
-    private Rectangle receptor3;
-    private Rectangle receptor4;
+    private final Rectangle receptor1;
+    private final Rectangle receptor2;
+    private final Rectangle receptor3;
+    private final Rectangle receptor4;
 
     // song data
-    private Music music;
-    private SongReader sr;
+    private final Music music;
+    private final SongReader sr;
     private boolean START = false;
 
     // temp other
     private int combo;
-    private Timer delayedMusicStart;
-    private Timer delayedNoteStart;
+    private final Timer delayedMusicStart;
+    private final Timer delayedNoteStart;
 
 
     public Gameplay(RhythmGame game) {
@@ -89,17 +93,17 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
-        bg = new Texture(Gdx.files.internal("Songs/der wald (Wh1teh)/BG.jpg"));
+        bg = new Texture(Gdx.files.internal("Songs/LN/bg.jpg"));
 
 
         // set up rectangles
-        receptor1 = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, R_HEIGHT,64,64);
-        receptor2 = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, R_HEIGHT,64,64);
-        receptor3 = new Rectangle(RhythmGame.V_WIDTH / 2, R_HEIGHT,64,64);
-        receptor4 = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, R_HEIGHT,64,64);
+        receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
+        receptor2 = new Rectangle(COL2_X, R_HEIGHT,64,64);
+        receptor3 = new Rectangle(COL3_X, R_HEIGHT,64,64);
+        receptor4 = new Rectangle(COL4_X, R_HEIGHT,64,64);
 
         // set up song data
-        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/der wald (Wh1teh)/audio.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/LN/Bluenation.mp3"));
         music.setVolume(0.5f);
         sr = new SongReader();
         delayedMusicStart = new Timer();
@@ -140,7 +144,7 @@ public class Gameplay implements Screen {
         game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2 - receptors_img.getRegionWidth() / 2 , R_HEIGHT);
         drawInput();
         drawNotes();
-        game.font.draw(game.batch, String.valueOf(combo), RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font, String.valueOf(combo)) / 2, C_HEIGHT);
+        game.font.draw(game.batch, String.valueOf(combo), RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font, String.valueOf(combo)) / 2, COMBO_HEIGHT);
         game.ltext.draw(game.batch, "GAMEPLAY", 5, 20);
         game.batch.end();
     }
@@ -163,16 +167,16 @@ public class Gameplay implements Screen {
     private void drawInput() {
         // lights up receptors if keys are pressed
         if (SongInput.receptor1Pressed()) {
-            game.batch.draw(note_clicked_1, RhythmGame.V_WIDTH / 2 - 128, R_HEIGHT);
+            game.batch.draw(note_clicked_1, COL1_X, R_HEIGHT);
         }
         if (SongInput.receptor2Pressed()) {
-            game.batch.draw(note_clicked_2, RhythmGame.V_WIDTH / 2 - 64, R_HEIGHT);
+            game.batch.draw(note_clicked_2, COL2_X, R_HEIGHT);
         }
         if (SongInput.receptor3Pressed()) {
-            game.batch.draw(note_clicked_3, RhythmGame.V_WIDTH / 2, R_HEIGHT);
+            game.batch.draw(note_clicked_3, COL3_X, R_HEIGHT);
         }
         if (SongInput.receptor4Pressed()) {
-            game.batch.draw(note_clicked_4, RhythmGame.V_WIDTH / 2 + 64, R_HEIGHT);
+            game.batch.draw(note_clicked_4, COL4_X, R_HEIGHT);
         }
     }
 
@@ -210,22 +214,30 @@ public class Gameplay implements Screen {
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
             if (note.y + 64 < 0) {
                 iter.remove();
+                if (note.x == COL1_X) sr.col1_hold_missed = true;
+                if (note.x == COL2_X) sr.col2_hold_missed = true;
+                if (note.x == COL3_X) sr.col3_hold_missed = true;
+                if (note.x == COL4_X) sr.col4_hold_missed = true;
                 combo = 0;
             }
             if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
                 iter.remove();
+                sr.col1_hold_missed = false;
                 combo++;
             }
             if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
                 iter.remove();
+                sr.col2_hold_missed = false;
                 combo++;
             }
             if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
                 iter.remove();
+                sr.col3_hold_missed = false;
                 combo++;
             }
             if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
                 iter.remove();
+                sr.col4_hold_missed = false;
                 combo++;
             }
         }
@@ -234,16 +246,17 @@ public class Gameplay implements Screen {
             Rectangle bar = iter.next();
             bar.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
             if (bar.y + 64 < 0) {
-                iter.remove();
-            }
-        }
-        // update hold note ends
-        for (Iterator<Rectangle> iter = sr.hold_notes_end.iterator(); iter.hasNext(); ) {
-            Rectangle end = iter.next();
-            end.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (end.y + 64 < 0) {
-                iter.remove();
-            }
+                iter.remove();            }
+            if (SongInput.receptor1Pressed() && !sr.col1_hold_missed && bar.x == COL1_X && bar.y - 20 < R_HEIGHT) iter.remove();
+            if (SongInput.receptor2Pressed() && !sr.col2_hold_missed && bar.x == COL2_X && bar.y - 20 < R_HEIGHT) iter.remove();
+            if (SongInput.receptor3Pressed() && !sr.col3_hold_missed && bar.x == COL3_X && bar.y - 20 < R_HEIGHT) iter.remove();
+            if (SongInput.receptor4Pressed() && !sr.col4_hold_missed && bar.x == COL4_X && bar.y - 20 < R_HEIGHT) iter.remove();
+            // let go
+            if (!SongInput.receptor1Pressed() && !sr.col1_hold_missed && bar.x == COL1_X) sr.col1_hold_missed = true;
+            if (!SongInput.receptor2Pressed() && !sr.col2_hold_missed && bar.x == COL2_X) sr.col1_hold_missed = true;
+            if (!SongInput.receptor3Pressed() && !sr.col3_hold_missed && bar.x == COL3_X) sr.col1_hold_missed = true;
+            if (!SongInput.receptor4Pressed() && !sr.col4_hold_missed && bar.x == COL4_X) sr.col1_hold_missed = true;
+
         }
     }
 
@@ -254,17 +267,17 @@ public class Gameplay implements Screen {
         }
         // tap notes
         for (Rectangle note : sr.tap_notes) {
-            if (note.x == RhythmGame.V_WIDTH / 2 - 128) game.batch.draw(note_1, note.x, note.y);
-            else if (note.x == RhythmGame.V_WIDTH / 2 - 64) game.batch.draw(note_2, note.x, note.y);
-            else if (note.x == RhythmGame.V_WIDTH / 2) game.batch.draw(note_3, note.x, note.y);
-            else if (note.x == RhythmGame.V_WIDTH / 2 + 64) game.batch.draw(note_4, note.x, note.y);
+            if (note.x == COL1_X) game.batch.draw(note_1, note.x, note.y);
+            else if (note.x == COL2_X) game.batch.draw(note_2, note.x, note.y);
+            else if (note.x == COL3_X) game.batch.draw(note_3, note.x, note.y);
+            else if (note.x == COL4_X) game.batch.draw(note_4, note.x, note.y);
         }
         // hold note heads
         for (Rectangle note : sr.hold_notes_start) {
-            if (note.x == RhythmGame.V_WIDTH / 2 - 128) game.batch.draw(note_1, note.x, note.y);
-            else if (note.x == RhythmGame.V_WIDTH / 2 - 64) game.batch.draw(note_2, note.x, note.y);
-            else if (note.x == RhythmGame.V_WIDTH / 2) game.batch.draw(note_3, note.x, note.y);
-            else if (note.x == RhythmGame.V_WIDTH / 2 + 64) game.batch.draw(note_4, note.x, note.y);
+            if (note.x == COL1_X) game.batch.draw(note_1, note.x, note.y);
+            else if (note.x == COL2_X) game.batch.draw(note_2, note.x, note.y);
+            else if (note.x == COL3_X) game.batch.draw(note_3, note.x, note.y);
+            else if (note.x == COL4_X) game.batch.draw(note_4, note.x, note.y);
         }
     }
 
