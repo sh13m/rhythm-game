@@ -44,6 +44,7 @@ public class Gameplay implements Screen {
     private final TextureRegion note_clicked_3;
     private final TextureRegion note_clicked_4;
     private final Texture stage;
+    private final Texture bg;
 
     // rectangles
     private Rectangle receptor1;
@@ -87,6 +88,8 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
+        bg = new Texture(Gdx.files.internal("Songs/der wald (Wh1teh)/BG.jpg"));
+
 
         // set up rectangles
         receptor1 = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, R_HEIGHT,64,64);
@@ -131,6 +134,7 @@ public class Gameplay implements Screen {
 
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
+        game.batch.draw(bg, 0,0,640,480);
         game.batch.draw(stage, RhythmGame.V_WIDTH / 2 - stage.getWidth() / 2, 0);
         game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2 - receptors_img.getRegionWidth() / 2 , R_HEIGHT);
         drawInput();
@@ -312,6 +316,7 @@ public class Gameplay implements Screen {
     public void dispose() {
         note_img.dispose();
         hold_bar_img.dispose();
+        bg.dispose();
         pm.dispose();
         cursor.dispose();
         music.dispose();
