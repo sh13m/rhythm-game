@@ -133,25 +133,37 @@ public class SongReader {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 128, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col1_held = true;
-            if (n == '3') col1_held = false;
+            if (n == '3') {
+                col1_held = false;
+                col1_hold_missed = false;
+            }
         }
         if (col2.get(current_measure_position).equals(n)) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 - 64, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col2_held = true;
-            if (n == '3') col2_held = false;
+            if (n == '3') {
+                col2_held = false;
+                col2_hold_missed = false;
+            }
         }
         if (col3.get(current_measure_position).equals(n)) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col3_held = true;
-            if (n == '3') col3_held = false;
+            if (n == '3') {
+                col3_held = false;
+                col3_hold_missed = false;
+            }
         }
         if (col4.get(current_measure_position).equals(n)) {
             Rectangle note = new Rectangle(RhythmGame.V_WIDTH / 2 + 64, 480,64,64);
             arr.add(note);
             if (n == '2' || n == '4') col4_held = true;
-            if (n == '3') col4_held = false;
+            if (n == '3') {
+                col4_held = false;
+                col4_hold_missed = false;
+            }
         }
     }
 
