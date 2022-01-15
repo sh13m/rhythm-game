@@ -157,16 +157,16 @@ public class Gameplay implements Screen {
 
     private void drawInput() {
         // lights up receptors if keys are pressed
-        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (receptor1Pressed()) {
             game.batch.draw(note_clicked_1, RhythmGame.V_WIDTH / 2 - 128, R_HEIGHT);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.F) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (receptor2Pressed()) {
             game.batch.draw(note_clicked_2, RhythmGame.V_WIDTH / 2 - 64, R_HEIGHT);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.J) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (receptor3Pressed()) {
             game.batch.draw(note_clicked_3, RhythmGame.V_WIDTH / 2, R_HEIGHT);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.K) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (receptor4Pressed()) {
             game.batch.draw(note_clicked_4, RhythmGame.V_WIDTH / 2 + 64, R_HEIGHT);
         }
     }
@@ -182,19 +182,19 @@ public class Gameplay implements Screen {
                 combo = 0;
             }
             // remove notes if they are successfully hit
-            if (note.overlaps(receptor1) && Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            if (note.overlaps(receptor1) && receptor1JustPressed()) {
                 iter.remove();
                 combo++;
             }
-            if (note.overlaps(receptor2) && Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if (note.overlaps(receptor2) && receptor2JustPressed()) {
                 iter.remove();
                 combo++;
             }
-            if (note.overlaps(receptor3) && Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+            if (note.overlaps(receptor3) && receptor3JustPressed()) {
                 iter.remove();
                 combo++;
             }
-            if (note.overlaps(receptor4) && Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            if (note.overlaps(receptor4) && receptor4JustPressed()) {
                 iter.remove();
                 combo++;
             }
@@ -207,19 +207,19 @@ public class Gameplay implements Screen {
                 iter.remove();
                 combo = 0;
             }
-            if (note.overlaps(receptor1) && Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            if (note.overlaps(receptor1) && receptor1JustPressed()) {
                 iter.remove();
                 combo++;
             }
-            if (note.overlaps(receptor2) && Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if (note.overlaps(receptor2) && receptor2JustPressed()) {
                 iter.remove();
                 combo++;
             }
-            if (note.overlaps(receptor3) && Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+            if (note.overlaps(receptor3) && receptor3JustPressed()) {
                 iter.remove();
                 combo++;
             }
-            if (note.overlaps(receptor4) && Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            if (note.overlaps(receptor4) && receptor4JustPressed()) {
                 iter.remove();
                 combo++;
             }
@@ -261,6 +261,31 @@ public class Gameplay implements Screen {
             else if (note.x == RhythmGame.V_WIDTH / 2) game.batch.draw(note_3, note.x, note.y);
             else if (note.x == RhythmGame.V_WIDTH / 2 + 64) game.batch.draw(note_4, note.x, note.y);
         }
+    }
+
+    private boolean receptor1JustPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.D) || Gdx.input.isKeyJustPressed(Input.Keys.LEFT);
+    }
+    private boolean receptor2JustPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.F) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN);
+    }
+    private boolean receptor3JustPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.J) || Gdx.input.isKeyJustPressed(Input.Keys.UP);
+    }
+    private boolean receptor4JustPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.K) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT);
+    }
+    private boolean receptor1Pressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+    }
+    private boolean receptor2Pressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.F) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+    }
+    private boolean receptor3Pressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.J) || Gdx.input.isKeyPressed(Input.Keys.UP);
+    }
+    private boolean receptor4Pressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.K) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
     }
 
     @Override
