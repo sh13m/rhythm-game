@@ -24,10 +24,15 @@ public class SongReader {
     private boolean first_notes_created;
     private boolean measure_parsed;
     public boolean song_ended;
+
     public boolean col1_held;
     public boolean col2_held;
     public boolean col3_held;
     public boolean col4_held;
+    public boolean col1_hold_missed;
+    public boolean col2_hold_missed;
+    public boolean col3_hold_missed;
+    public boolean col4_hold_missed;
 
     private int current_line;
     private int current_measure_position;
@@ -58,6 +63,7 @@ public class SongReader {
         col2_held = false;
         col3_held = false;
         col4_held = false;
+
 
         first_notes_created = false;
         measure_parsed = false;

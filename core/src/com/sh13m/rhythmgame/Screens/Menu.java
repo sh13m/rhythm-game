@@ -21,7 +21,6 @@ public class Menu implements Screen {
     // assets
     private final Texture logo;
     private final Sound click;
-    private final Sound select;
     private float timeSinceClick;
     private boolean selected;
 
@@ -33,7 +32,6 @@ public class Menu implements Screen {
         // set up assets
         logo = new Texture("Graphics/logo.png");
         click = Gdx.audio.newSound(Gdx.files.internal("SFX/click.ogg"));
-        select = Gdx.audio.newSound(Gdx.files.internal("SFX/select.ogg"));
         timeSinceClick = 0;
         selected = false;
 
@@ -88,7 +86,7 @@ public class Menu implements Screen {
         }
         // runs selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !selected) {
-            select.play();
+            click.play();
             selected = true;
         }
     }
@@ -170,6 +168,5 @@ public class Menu implements Screen {
     public void dispose() {
         logo.dispose();
         click.dispose();
-        select.dispose();
     }
 }

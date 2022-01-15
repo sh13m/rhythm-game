@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,7 +13,7 @@ import com.sh13m.rhythmgame.Screens.Menu;
 public class RhythmGame extends Game {
 	private Graphics.DisplayMode displayMode;
 	private boolean isFullScreen;
-	public static int V_WIDTH;
+	public static final int V_WIDTH = 640;
 	public static final int V_HEIGHT = 480;
 
 	public ShapeRenderer shapeRenderer;
@@ -20,15 +21,12 @@ public class RhythmGame extends Game {
 	public BitmapFont font;
 	public BitmapFont ltext;
 
+	public Music menuTheme;
+
 	@Override
 	public void create() {
-		// sets width depending on screen aspect ratio
 		displayMode = Gdx.graphics.getDisplayMode();
-		V_WIDTH = 480 * displayMode.width / displayMode.height;
-		// sets to borderless fullscreen
-		Gdx.graphics.setUndecorated(true);
-		Gdx.graphics.setWindowedMode(displayMode.width, displayMode.height);
-		isFullScreen = true;
+		isFullScreen = false;
 
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
@@ -40,6 +38,10 @@ public class RhythmGame extends Game {
 				false);
 		ltext = new BitmapFont();
 		ltext.getData().setScale(0.7f);
+
+		menuTheme = Gdx.audio.newMusic(Gdx.files.internal("SFX/Music title (loop).ogg"));
+		menuTheme.setLooping(true);
+		menuTheme.play();
 
 		setScreen(new Menu(this));
 	}
@@ -73,5 +75,6 @@ public class RhythmGame extends Game {
 		shapeRenderer.dispose();
 		font.dispose();
 		ltext.dispose();
+		menuTheme.dispose();
 	}
 }

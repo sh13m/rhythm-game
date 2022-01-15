@@ -9,8 +9,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Rhythm Game";
-		config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
-		config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
+		config.width = 640;
+		config.height = 480;
 		config.foregroundFPS = 240;
 		config.backgroundFPS = 30;
 		config.addIcon("iconL.png", Files.FileType.Internal); // Mac

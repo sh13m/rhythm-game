@@ -26,6 +26,8 @@ public class SongSelect implements Screen {
         cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
         viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 
+        if (!this.game.menuTheme.isPlaying()) this.game.menuTheme.play();
+
         selection = 0;
     }
 
@@ -59,6 +61,7 @@ public class SongSelect implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             game.setScreen(new Gameplay(game));
+            game.menuTheme.stop();
             dispose();
         }
     }
