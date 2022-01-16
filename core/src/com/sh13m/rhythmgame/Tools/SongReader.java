@@ -38,7 +38,7 @@ public class SongReader {
     public Array<Rectangle> hold_bars;
 
     public SongReader() {
-        songFile = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
+        songFile = Gdx.files.internal("Songs/2/derwald.sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
@@ -107,7 +107,7 @@ public class SongReader {
 
         if (timeSinceStart >= measureTime) {
             measureParsed = false;
-            timeSinceStart = 0;
+            timeSinceStart -= timeSinceStart;
         }
     }
 
