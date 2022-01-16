@@ -199,22 +199,22 @@ public class SongReader {
 
     private void createHoldNoteEnd(int i) {
         if (col1.get(i).equals('3')) {
-            Rectangle end = new Rectangle(Gameplay.COL1_X, 512 + i * incrementLength,64, incrementLength);
+            Rectangle end = new Rectangle(Gameplay.COL1_X, 514+ i * incrementLength,64, incrementLength);
             hold_notes_end.add(end);
             isDrawingCol1Bar = false;
         }
         if (col2.get(i).equals('3')) {
-            Rectangle end = new Rectangle(Gameplay.COL2_X, 512 + i * incrementLength,64, incrementLength);
+            Rectangle end = new Rectangle(Gameplay.COL2_X, 514 + i * incrementLength,64, incrementLength);
             hold_notes_end.add(end);
             isDrawingCol2Bar = false;
         }
         if (col3.get(i).equals('3')) {
-            Rectangle end = new Rectangle(Gameplay.COL3_X, 512 + i * incrementLength,64, incrementLength);
+            Rectangle end = new Rectangle(Gameplay.COL3_X, 514 + i * incrementLength,64, incrementLength);
             hold_notes_end.add(end);
             isDrawingCol3Bar = false;
         }
         if (col4.get(i).equals('3')) {
-            Rectangle end = new Rectangle(Gameplay.COL4_X, 512 + i * incrementLength,64, incrementLength);
+            Rectangle end = new Rectangle(Gameplay.COL4_X, 514 + i * incrementLength,64, incrementLength);
             hold_notes_end.add(end);
             isDrawingCol4Bar = false;
         }
