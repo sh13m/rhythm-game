@@ -21,6 +21,7 @@ public class SongReader {
 
     private boolean measureParsed;
     public boolean songEnded;
+    private boolean lastMeasure;
 
     public boolean isDrawingCol1Bar;
     public boolean isDrawingCol2Bar;
@@ -58,6 +59,7 @@ public class SongReader {
         isDrawingCol4Bar = false;
 
         measureParsed = false;
+        lastMeasure = false;
         songEnded = false;
 
         measureTime = 1/(bpm / 60 / 4);
@@ -75,7 +77,7 @@ public class SongReader {
         col4.setSize(0);
         while (true) {
             if (fileLines[currentLine].equals(",") || fileLines[currentLine].equals(";")) {
-                if (fileLines[currentLine].equals(";")) songEnded = true;
+                if (fileLines[currentLine].equals(";")) lastMeasure = true;
                 currentLine++;
                 break;
             }
@@ -106,8 +108,11 @@ public class SongReader {
         }
 
         if (timeSinceStart >= measureTime) {
-            measureParsed = false;
-            timeSinceStart -= timeSinceStart;
+            if (lastMeasure) songEnded = true;
+            else {
+                measureParsed = false;
+                timeSinceStart -= measureTime;
+            }
         }
     }
 
