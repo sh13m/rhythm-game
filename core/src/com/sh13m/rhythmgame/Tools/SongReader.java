@@ -19,7 +19,7 @@ public class SongReader {
 
     private float timeSinceStart;
     private float incrementTime;
-    private float measureTime;
+    public float measureTime;
     private float timeSinceLastBar;
 
     private boolean firstNotesCreated;
@@ -44,7 +44,7 @@ public class SongReader {
     public Array<Rectangle> hold_bars;
 
     public SongReader() {
-        songFile = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
+        songFile = Gdx.files.internal("Songs/LN/bug thief.sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
@@ -74,8 +74,6 @@ public class SongReader {
         noteType = 0;
     }
 
-    // 192 NOTE TYPES SEEM TO BE WEIRD RN HOLD NOTES ARE REALLY BROKEN
-    // Some hold note heads just aren't drawing???
     private void parseMeasure() {
         noteType = 0;
         col1.setSize(0);
@@ -96,26 +94,32 @@ public class SongReader {
             currentLine++;
         }
         incrementTime = measureTime / noteType;
-        System.out.println(noteType + " " + incrementTime); // DEBUGGING
     }
 
     public void readMeasure(float delta) {
         timeSinceStart += delta;
+
         if (!measureParsed) {
             parseMeasure();
             measureParsed = true;
         }
+
         if (!firstNotesCreated) {
             addNotes();
+            currentMeasurePosition++;
             firstNotesCreated = true;
         }
+
         if (timeSinceStart >= incrementTime) {
-            addNotes();
+            if (currentMeasurePosition == noteType) {
+                measureParsed = false;
+                currentMeasurePosition = 0;
+                firstNotesCreated = false;
+            } else {
+                addNotes();
+                currentMeasurePosition++;
+            }
             timeSinceStart -= incrementTime;
-        }
-        if (currentMeasurePosition == noteType) {
-            measureParsed = false;
-            currentMeasurePosition = 0;
         }
     }
 
@@ -125,7 +129,6 @@ public class SongReader {
         // create hold notes
         createNotes('2', hold_notes_start);
         createHoldEnds('3');
-        currentMeasurePosition++;
     }
 
     private void createNotes(char n, Array<Rectangle> arr) {
@@ -189,6 +192,7 @@ public class SongReader {
             timeSinceLastBar = 0;
         }
     }
+
 
     private void getNoteDataStart() {
         for (int i = 0; i < fileLines.length; i++) {
