@@ -153,7 +153,7 @@ public class Gameplay implements Screen {
         handleInput();
         if (!sr.songEnded && START) {
             sr.readMeasure(delta);
-            sr.addHoldBars(delta);
+            //sr.addHoldBars(delta);
             updateNotes();
         }
 
