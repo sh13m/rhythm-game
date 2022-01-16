@@ -44,7 +44,7 @@ public class SongReader {
     public Array<Rectangle> hold_bars;
 
     public SongReader() {
-        songFile = Gdx.files.internal("Songs/LN/bug thief.sm");
+        songFile = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
@@ -94,6 +94,7 @@ public class SongReader {
             currentLine++;
         }
         incrementTime = measureTime / noteType;
+        System.out.println(noteType + " " + incrementTime); // debug
     }
 
     public void readMeasure(float delta) {
