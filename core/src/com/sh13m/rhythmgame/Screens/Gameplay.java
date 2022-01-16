@@ -240,7 +240,7 @@ public class Gameplay implements Screen {
         for (Iterator<Rectangle> iter = sr.hold_bars.iterator(); iter.hasNext(); ) {
             Rectangle bar = iter.next();
             bar.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (bar.y + 64 < 0) iter.remove();
+            if (bar.y + bar.height < 0) iter.remove();
 
         }
     }
@@ -248,7 +248,7 @@ public class Gameplay implements Screen {
     private void drawNotes() {
         // hold bars
         for (Rectangle bar : sr.hold_bars) {
-            game.batch.draw(hold_bar_img, bar.x, bar.y);
+            game.batch.draw(hold_bar_img, bar.x, bar.y, bar.width, bar.height);
         }
         // tap notes
         for (Rectangle note : sr.tap_notes) {

@@ -16,9 +16,9 @@ public class SongReader {
     private int noteType;
 
     public float timeSinceStart;
+
     public float measureTime;
 
-    private boolean firstNotesCreated;
     private boolean measureParsed;
     public boolean songEnded;
 
@@ -57,13 +57,13 @@ public class SongReader {
         isDrawingCol3Bar = false;
         isDrawingCol4Bar = false;
 
-        firstNotesCreated = false;
         measureParsed = false;
         songEnded = false;
 
         measureTime = 1/(bpm / 60 / 4);
         measureLength = Gameplay.SCROLL_SPEED * measureTime;
         timeSinceStart = 0;
+
         noteType = 0;
     }
 
@@ -92,11 +92,15 @@ public class SongReader {
     public void readMeasure(float delta) {
         timeSinceStart += delta;
 
+
+
         if (!measureParsed) {
             parseMeasure();
             for (int i=0; i < noteType; i++) {
-                createNotes('1', tap_notes, i);
-                createNotes('2', hold_notes_start, i);
+                createTapNotes(i);
+                createHoldNotes(i);
+                checkHoldNoteEnd(i);
+                createBar(i);
             }
             measureParsed = true;
         }
@@ -107,23 +111,82 @@ public class SongReader {
         }
     }
 
-    private void createNotes(char n, Array<Rectangle> arr, int i) {
+    private void createTapNotes(int i) {
         // creates an adds a note to its corresponding array
-        if (col1.get(i).equals(n)) {
+        if (col1.get(i).equals('1')) {
             Rectangle note = new Rectangle(Gameplay.COL1_X, 480 + i * incrementLength,64,64);
-            arr.add(note);
+            tap_notes.add(note);
         }
-        if (col2.get(i).equals(n)) {
+        if (col2.get(i).equals('1')) {
             Rectangle note = new Rectangle(Gameplay.COL2_X, 480 + i * incrementLength,64,64);
-            arr.add(note);
+            tap_notes.add(note);
         }
-        if (col3.get(i).equals(n)) {
+        if (col3.get(i).equals('1')) {
             Rectangle note = new Rectangle(Gameplay.COL3_X, 480 + i * incrementLength,64,64);
-            arr.add(note);
+            tap_notes.add(note);
         }
-        if (col4.get(i).equals(n)) {
+        if (col4.get(i).equals('1')) {
             Rectangle note = new Rectangle(Gameplay.COL4_X, 480 + i * incrementLength,64,64);
-            arr.add(note);
+            tap_notes.add(note);
+        }
+    }
+
+    private void createHoldNotes(int i) {
+        // create the heads
+        if (col1.get(i).equals('2')) {
+            Rectangle note = new Rectangle(Gameplay.COL1_X, 480 + i * incrementLength,64,64);
+            hold_notes_start.add(note);
+            isDrawingCol1Bar = true;
+        }
+        if (col2.get(i).equals('2')) {
+            Rectangle note = new Rectangle(Gameplay.COL2_X, 480 + i * incrementLength,64,64);
+            hold_notes_start.add(note);
+            isDrawingCol2Bar = true;
+        }
+        if (col3.get(i).equals('2')) {
+            Rectangle note = new Rectangle(Gameplay.COL3_X, 480 + i * incrementLength,64,64);
+            hold_notes_start.add(note);
+            isDrawingCol3Bar = true;
+        }
+        if (col4.get(i).equals('2')) {
+            Rectangle note = new Rectangle(Gameplay.COL4_X, 480 + i * incrementLength,64,64);
+            hold_notes_start.add(note);
+            isDrawingCol4Bar = true;
+        }
+    }
+
+    private void createBar(int i) {
+        if (isDrawingCol1Bar) {
+            Rectangle bar = new Rectangle(Gameplay.COL1_X, 512 + i * incrementLength, 64, incrementLength*1.05f);
+            hold_bars.add(bar);
+        }
+        if (isDrawingCol2Bar) {
+            Rectangle bar = new Rectangle(Gameplay.COL2_X, 512 + i * incrementLength, 64, incrementLength*1.05f);
+            hold_bars.add(bar);
+        }
+        if (isDrawingCol3Bar) {
+            Rectangle bar = new Rectangle(Gameplay.COL3_X, 512 + i * incrementLength, 64, incrementLength*1.05f);
+            hold_bars.add(bar);
+        }
+        if (isDrawingCol4Bar) {
+            Rectangle bar = new Rectangle(Gameplay.COL4_X, 512 + i * incrementLength, 64, incrementLength*1.05f);
+            hold_bars.add(bar);
+        }
+
+    }
+
+    private void checkHoldNoteEnd(int i) {
+        if (col1.get(i).equals('3')) {
+            isDrawingCol1Bar = false;
+        }
+        if (col2.get(i).equals('3')) {
+            isDrawingCol2Bar = false;
+        }
+        if (col3.get(i).equals('3')) {
+            isDrawingCol3Bar = false;
+        }
+        if (col4.get(i).equals('3')) {
+            isDrawingCol4Bar = false;
         }
     }
 
