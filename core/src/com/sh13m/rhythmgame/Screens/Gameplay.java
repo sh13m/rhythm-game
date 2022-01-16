@@ -152,8 +152,7 @@ public class Gameplay implements Screen {
     private void update(float delta) {
         handleInput();
         if (!sr.songEnded && START) {
-            sr.readMeasure(delta);
-            //sr.addHoldBars(delta);
+            sr.parseMeasure(delta);
             updateNotes();
         }
 

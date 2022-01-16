@@ -69,7 +69,7 @@ public class SongReader {
         noteType = 0;
     }
 
-    private void parseMeasure() {
+    private void readMeasure() {
         noteType = 0;
         col1.setSize(0);
         col2.setSize(0);
@@ -91,13 +91,11 @@ public class SongReader {
         incrementLength = measureLength / noteType;
     }
 
-    public void readMeasure(float delta) {
+    public void parseMeasure(float delta) {
         timeSinceStart += delta;
 
-
-
         if (!measureParsed) {
-            parseMeasure();
+            readMeasure();
             for (int i=0; i < noteType; i++) {
                 createTapNotes(i);
                 createHoldNotes(i);
