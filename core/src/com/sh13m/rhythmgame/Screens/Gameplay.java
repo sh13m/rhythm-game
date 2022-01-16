@@ -28,6 +28,7 @@ public class Gameplay implements Screen {
     public static float COL2_X = RhythmGame.V_WIDTH / 2 - 64;
     public static float COL3_X = RhythmGame.V_WIDTH / 2;
     public static float COL4_X = RhythmGame.V_WIDTH / 2 + 64;
+    private static float HOLD_CHECK_PERIOD = 0.5f;
 
     // render
     private final RhythmGame game;
@@ -62,6 +63,24 @@ public class Gameplay implements Screen {
     private final SongReader sr;
     private boolean START = false;
 
+    // hold properties
+    private boolean col1isHeld;
+    private boolean col2isHeld;
+    private boolean col3isHeld;
+    private boolean col4isHeld;
+    private boolean col1HoldMissed;
+    private boolean col2HoldMissed;
+    private boolean col3HoldMissed;
+    private boolean col4HoldMissed;
+    private boolean col1HoldComboBreak;
+    private boolean col2HoldComboBreak;
+    private boolean col3HoldComboBreak;
+    private boolean col4HoldComboBreak;
+    private float col1HoldCheckDelta;
+    private float col2HoldCheckDelta;
+    private float col3HoldCheckDelta;
+    private float col4HoldCheckDelta;
+
     // temp other
     private int combo;
     private final Timer delayedMusicStart;
@@ -93,8 +112,7 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
-        bg = new Texture(Gdx.files.internal("Songs/2/BG.jpg"));
-
+        bg = new Texture(Gdx.files.internal("Songs/LN/bg.jpg"));
 
         // set up rectangles
         receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
@@ -102,8 +120,26 @@ public class Gameplay implements Screen {
         receptor3 = new Rectangle(COL3_X, R_HEIGHT,64,64);
         receptor4 = new Rectangle(COL4_X, R_HEIGHT,64,64);
 
+        // set up hold properties
+        col1isHeld = false;
+        col2isHeld = false;
+        col3isHeld = false;
+        col4isHeld = false;
+        col1HoldMissed = false;
+        col2HoldMissed = false;
+        col3HoldMissed = false;
+        col4HoldMissed = false;
+        col1HoldComboBreak = false;
+        col2HoldComboBreak = false;
+        col3HoldComboBreak = false;
+        col4HoldComboBreak = false;
+        col1HoldCheckDelta = 0;
+        col2HoldCheckDelta = 0;
+        col3HoldCheckDelta = 0;
+        col4HoldCheckDelta = 0;
+
         // set up song data
-        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/2/audio.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/LN/Bluenation.mp3"));
         music.setVolume(0.3f);
         sr = new SongReader();
         delayedMusicStart = new Timer();
@@ -153,7 +189,7 @@ public class Gameplay implements Screen {
         handleInput();
         if (!sr.songEnded && START) {
             sr.parseMeasure(delta);
-            updateNotes();
+            updateNotes(delta);
         }
 
     }
@@ -166,28 +202,12 @@ public class Gameplay implements Screen {
 
     }
 
-    private void drawInput() {
-        // lights up receptors if keys are pressed
-        if (SongInput.receptor1Pressed()) {
-            game.batch.draw(note_clicked_1, COL1_X, R_HEIGHT);
-        }
-        if (SongInput.receptor2Pressed()) {
-            game.batch.draw(note_clicked_2, COL2_X, R_HEIGHT);
-        }
-        if (SongInput.receptor3Pressed()) {
-            game.batch.draw(note_clicked_3, COL3_X, R_HEIGHT);
-        }
-        if (SongInput.receptor4Pressed()) {
-            game.batch.draw(note_clicked_4, COL4_X, R_HEIGHT);
-        }
-    }
-
-    private void updateNotes() {
+    private void updateNotes(float delta) {
         // update tap notes
         for (Iterator<Rectangle> iter = sr.tap_notes.iterator(); iter.hasNext(); ) {
             Rectangle note = iter.next();
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            // remove notes if they fall off screen
+            // remove notes if they fall off-screen
             if (note.y + 64 < 0) {
                 iter.remove();
                 combo = 0;
@@ -214,33 +234,188 @@ public class Gameplay implements Screen {
         for (Iterator<Rectangle> iter = sr.hold_notes_start.iterator(); iter.hasNext(); ) {
             Rectangle note = iter.next();
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (note.y + 64 < 0) {
-                iter.remove();
-                combo = 0;
+
+            if (note.y + 64 < R_HEIGHT) {
+                if (note.y + 64 < 0) {
+                    // remove notes if they fall off-screen
+                    iter.remove();
+                    combo = 0;
+                }
+                // window to hit hold note has been missed
+                if (note.x == COL1_X) {
+                    col1isHeld = false;
+                    col1HoldMissed = true;
+                    col1HoldComboBreak = false;
+                }
+                if (note.x == COL2_X) {
+                    col2isHeld = false;
+                    col2HoldMissed = true;
+                    col2HoldComboBreak = false;
+                }
+                if (note.x == COL3_X) {
+                    col3isHeld = false;
+                    col3HoldMissed = true;
+                    col3HoldComboBreak = false;
+                }
+                if (note.x == COL4_X) {
+                    col4isHeld = false;
+                    col4HoldMissed = true;
+                    col4HoldComboBreak = false;
+                }
             }
+            // hold note head successfully hit
             if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
                 iter.remove();
                 combo++;
+                col1isHeld = true;
+                col1HoldMissed = false;
             }
             if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
                 iter.remove();
                 combo++;
+                col2isHeld = true;
+                col2HoldMissed = false;
             }
             if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
                 iter.remove();
                 combo++;
+                col3isHeld = true;
+                col3HoldMissed = false;
             }
             if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
                 iter.remove();
                 combo++;
+                col4isHeld = true;
+                col4HoldMissed = false;
             }
         }
         // update hold bars
         for (Iterator<Rectangle> iter = sr.hold_bars.iterator(); iter.hasNext(); ) {
-            Rectangle bar = iter.next();
-            bar.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (bar.y + bar.height < 0) iter.remove();
+            try { // really jank fix but seems to work
+                Rectangle bar = iter.next();
+                bar.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+                // remove bars if they fall off-screen
+                if (bar.y + bar.height < 0) iter.remove();
 
+                // bar is held and not missed
+                if (bar.x == COL1_X && !col1HoldMissed && bar.y < R_HEIGHT + 32) {
+                    iter.remove();
+                }
+                if (bar.x == COL2_X && !col2HoldMissed &&  bar.y < R_HEIGHT + 32) {
+                    iter.remove();
+                }
+                if (bar.x == COL3_X && !col3HoldMissed && bar.y < R_HEIGHT + 32) {
+                    iter.remove();
+                }
+                if (bar.x == COL4_X && !col4HoldMissed && bar.y < R_HEIGHT + 32) {
+                    iter.remove();
+                }
+            } catch (ArrayIndexOutOfBoundsException e){
+
+            }
+        }
+        // check if hold note was let go too early every so often
+        if (col1isHeld) {
+            if (!SongInput.receptor1Pressed()) col1HoldCheckDelta += delta;
+            else col1HoldCheckDelta = 0;
+            if (col1HoldCheckDelta >= HOLD_CHECK_PERIOD) {
+                if (!col1HoldMissed) {
+                    col1HoldMissed = true;
+                    if (!col1HoldComboBreak) {
+                        combo = 0;
+                        col1HoldComboBreak = true;
+                    }
+                }
+                col1HoldCheckDelta -= HOLD_CHECK_PERIOD;
+            }
+        }
+        if (col2isHeld) {
+            if (!SongInput.receptor2Pressed()) col2HoldCheckDelta += delta;
+            else col2HoldCheckDelta = 0;
+            if (col2HoldCheckDelta >= HOLD_CHECK_PERIOD) {
+                if (!col2HoldMissed) {
+                    col2HoldMissed = true;
+                    if (!col2HoldComboBreak) {
+                        combo = 0;
+                        col2HoldComboBreak = true;
+                    }
+                }
+                col2HoldCheckDelta -= HOLD_CHECK_PERIOD;
+            }
+        }
+        if (col3isHeld) {
+            if (!SongInput.receptor3Pressed()) col3HoldCheckDelta += delta;
+            else col3HoldCheckDelta = 0;
+            if (col3HoldCheckDelta >= HOLD_CHECK_PERIOD) {
+                if (!col3HoldMissed) {
+                    col3HoldMissed = true;
+                    if (!col3HoldComboBreak) {
+                        combo = 0;
+                        col3HoldComboBreak = true;
+                    }
+                }
+                col3HoldCheckDelta -= HOLD_CHECK_PERIOD;
+            }
+        }
+        if (col4isHeld) {
+            if (!SongInput.receptor4Pressed()) col4HoldCheckDelta += delta;
+            else col4HoldCheckDelta = 0;
+            if (col4HoldCheckDelta >= HOLD_CHECK_PERIOD) {
+                if (!col4HoldMissed) {
+                    col4HoldMissed = true;
+                    if (!col4HoldComboBreak) {
+                        combo = 0;
+                        col4HoldComboBreak = true;
+                    }
+                }
+                col4HoldCheckDelta -= HOLD_CHECK_PERIOD;
+            }
+        }
+
+        // update hold end
+        for (Iterator<Rectangle> iter = sr.hold_notes_end.iterator(); iter.hasNext(); ) {
+            Rectangle end = iter.next();
+            end.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            // remove bars if they fall off-screen
+            if (end.y < R_HEIGHT) {
+                iter.remove();
+                if (end.x == COL1_X) {
+                    col1isHeld = false;
+                    col1HoldComboBreak = false;
+                    col1HoldCheckDelta = 0;
+                }
+                if (end.x == COL2_X) {
+                    col2isHeld = false;
+                    col2HoldComboBreak = false;
+                    col2HoldCheckDelta = 0;
+                }
+                if (end.x == COL3_X) {
+                    col3isHeld = false;
+                    col3HoldComboBreak = false;
+                    col3HoldCheckDelta = 0;
+                }
+                if (end.x == COL4_X) {
+                    col4isHeld = false;
+                    col4HoldComboBreak = false;
+                    col4HoldCheckDelta = 0;
+                }
+            }
+        }
+    }
+
+    private void drawInput() {
+        // lights up receptors if keys are pressed
+        if (SongInput.receptor1Pressed()) {
+            game.batch.draw(note_clicked_1, COL1_X, R_HEIGHT);
+        }
+        if (SongInput.receptor2Pressed()) {
+            game.batch.draw(note_clicked_2, COL2_X, R_HEIGHT);
+        }
+        if (SongInput.receptor3Pressed()) {
+            game.batch.draw(note_clicked_3, COL3_X, R_HEIGHT);
+        }
+        if (SongInput.receptor4Pressed()) {
+            game.batch.draw(note_clicked_4, COL4_X, R_HEIGHT);
         }
     }
 
