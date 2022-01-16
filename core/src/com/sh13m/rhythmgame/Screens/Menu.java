@@ -65,25 +65,25 @@ public class Menu implements Screen {
         handleInput();
         if (selected) {
             timeSinceClick += delta;
-            if (timeSinceClick > 0.5f) handleSelection();
+            if (timeSinceClick > 0.3f) handleSelection();
         }
     }
 
     private void handleInput() {
         // cycles through selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && !selected) {
-            game.click.play(0.5f);
+            game.click.play(0.3f);
             selection++;
             if (selection > 3) selection = 0;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !selected) {
-            game.click.play(0.5f);
+            game.click.play(0.3f);
             selection--;
             if (selection < 0) selection = 3;
         }
         // runs selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !selected) {
-            game.click.play(0.5f);
+            game.click.play(0.3f);
             selected = true;
         }
     }

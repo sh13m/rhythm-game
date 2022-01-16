@@ -58,18 +58,18 @@ public class Reset implements Screen {
         }
         // Cycles between yes or no
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            game.click.play(0.5f);
+            game.click.play(0.3f);
             selection++;
             if (selection > 1) selection = 0;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            game.click.play(0.5f);
+            game.click.play(0.3f);
             selection--;
             if (selection < 0) selection = 1;
         }
         // runs selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            game.click.play(0.5f);
+            game.click.play(0.3f);
             handleSelection();
         }
     }
