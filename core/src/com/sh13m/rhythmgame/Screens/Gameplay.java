@@ -114,7 +114,7 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
-        bg = new Texture(Gdx.files.internal("Songs/LN/bg.jpg"));
+        bg = new Texture(Gdx.files.internal("Songs/7/bg.jpg"));
 
         // set up rectangles
         receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
@@ -142,7 +142,7 @@ public class Gameplay implements Screen {
         holdFX = new Array<>();
 
         // set up song data
-        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/LN/Bluenation.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/7/audio.mp3"));
         music.setVolume(0.3f);
         sr = new SongReader();
         delayedMusicStart = new Timer();
@@ -178,7 +178,9 @@ public class Gameplay implements Screen {
 
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
-        game.batch.draw(bg, 0,0,640,480);
+        game.batch.setColor(1,1,1,0.2f);
+        game.batch.draw(bg, RhythmGame.V_WIDTH/2 - (480*bg.getWidth()/bg.getHeight())/2,0,480*bg.getWidth()/bg.getHeight(),480);
+        game.batch.setColor(1,1,1,1);
         game.batch.draw(stage, RhythmGame.V_WIDTH / 2 - stage.getWidth() / 2, 0);
         game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2 - receptors_img.getRegionWidth() / 2 , R_HEIGHT);
         drawInput();

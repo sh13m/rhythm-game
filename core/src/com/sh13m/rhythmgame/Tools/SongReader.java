@@ -40,7 +40,7 @@ public class SongReader {
     public Array<Rectangle> hold_notes_end;
 
     public SongReader() {
-        songFile = Gdx.files.internal("Songs/LN/yaseta - Bluenation (Penguinosity).sm");
+        songFile = Gdx.files.internal("Songs/7/marigold.sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
@@ -78,8 +78,8 @@ public class SongReader {
         col3.setSize(0);
         col4.setSize(0);
         while (true) {
-            if (fileLines[currentLine].equals(",") || fileLines[currentLine].equals(";")) {
-                if (fileLines[currentLine].equals(";")) lastMeasure = true;
+            if (fileLines[currentLine].contains(",") || fileLines[currentLine].contains(";")) {
+                if (fileLines[currentLine].contains(";")) lastMeasure = true;
                 currentLine++;
                 break;
             }
