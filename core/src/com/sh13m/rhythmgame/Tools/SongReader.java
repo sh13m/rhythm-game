@@ -40,7 +40,7 @@ public class SongReader {
     public Array<Rectangle> hold_notes_end;
 
     public SongReader() {
-        songFile = Gdx.files.internal("Songs/5/map.sm");
+        songFile = Gdx.files.internal("Songs/2/map.sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
