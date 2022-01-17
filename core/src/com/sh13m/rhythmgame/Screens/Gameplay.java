@@ -242,30 +242,6 @@ public class Gameplay implements Screen {
                 iter.remove();
                 combo = 0;
             }
-
-            if (note.y + 65 < R_HEIGHT) {
-                // window to hit hold note has been missed
-                if (note.x == COL1_X) {
-                    col1isHeld = false;
-                    col1HoldMissed = true;
-                    col1HoldComboBreak = false;
-                }
-                if (note.x == COL2_X) {
-                    col2isHeld = false;
-                    col2HoldMissed = true;
-                    col2HoldComboBreak = false;
-                }
-                if (note.x == COL3_X) {
-                    col3isHeld = false;
-                    col3HoldMissed = true;
-                    col3HoldComboBreak = false;
-                }
-                if (note.x == COL4_X) {
-                    col4isHeld = false;
-                    col4HoldMissed = true;
-                    col4HoldComboBreak = false;
-                }
-            }
             // hold note head successfully hit
             if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
                 iter.remove();
@@ -298,6 +274,29 @@ public class Gameplay implements Screen {
                 col4HoldMissed = false;
                 Rectangle noteFX = new Rectangle(COL4_X, R_HEIGHT,64,64);
                 holdFX.add(noteFX);
+            }
+            // window to hit hold note has been missed
+            if (note.y + 64 < R_HEIGHT) {
+                if (note.x == COL1_X) {
+                    col1isHeld = false;
+                    col1HoldMissed = true;
+                    col1HoldComboBreak = false;
+                }
+                if (note.x == COL2_X) {
+                    col2isHeld = false;
+                    col2HoldMissed = true;
+                    col2HoldComboBreak = false;
+                }
+                if (note.x == COL3_X) {
+                    col3isHeld = false;
+                    col3HoldMissed = true;
+                    col3HoldComboBreak = false;
+                }
+                if (note.x == COL4_X) {
+                    col4isHeld = false;
+                    col4HoldMissed = true;
+                    col4HoldComboBreak = false;
+                }
             }
         }
         // update hold bars
