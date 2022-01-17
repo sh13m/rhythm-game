@@ -29,7 +29,7 @@ public class Gameplay implements Screen {
     public static float COL2_X = RhythmGame.V_WIDTH / 2 - 64;
     public static float COL3_X = RhythmGame.V_WIDTH / 2;
     public static float COL4_X = RhythmGame.V_WIDTH / 2 + 64;
-    private static float HOLD_CHECK_PERIOD = 0.5f;
+    private static float HOLD_CHECK_PERIOD = 0.35f;
 
     // render
     private final RhythmGame game;
