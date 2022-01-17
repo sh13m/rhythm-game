@@ -42,7 +42,7 @@ public class RhythmGame extends Game {
 		ltext.getData().setScale(0.7f);
 		click = Gdx.audio.newSound(Gdx.files.internal("SFX/click.ogg"));
 		menuTheme = Gdx.audio.newMusic(Gdx.files.internal("SFX/Music title (loop).ogg"));
-		menuTheme.setVolume(0.3f);
+		menuTheme.setVolume(0.2f);
 		menuTheme.setLooping(true);
 		menuTheme.play();
 

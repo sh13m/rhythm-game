@@ -20,6 +20,7 @@ public class Gameplay implements Screen {
     // gameplay settings
     public static final int R_HEIGHT = 30;
     private static final int COMBO_HEIGHT = 300;
+    private static final int J_HEIGHT = 240;
     public static final int SCROLL_SPEED = 900;
     private static final float GLOBAL_DELAY = 3;
     private static final float SCROLL_OFFSET = (480f - R_HEIGHT) / SCROLL_SPEED;
@@ -49,6 +50,13 @@ public class Gameplay implements Screen {
     private final TextureRegion note_clicked_4;
     private final Texture stage;
     private final Texture bg;
+    private final Texture Judgement;
+    private final TextureRegion MISS;
+    private final TextureRegion BAD;
+    private final TextureRegion GOOD;
+    private final TextureRegion GREAT;
+    private final TextureRegion PERFECT;
+    private final TextureRegion MAX;
 
     // rectangles
     private final Rectangle receptor1;
@@ -91,6 +99,14 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
+        Judgement = new Texture(Gdx.files.internal("Graphics/Modern Nore 1x6.png"));
+        MISS = new TextureRegion(Judgement,0,170,256,34);
+        BAD = new TextureRegion(Judgement,0,136,256,34);
+        GOOD = new TextureRegion(Judgement,0,102,256,34);
+        GREAT = new TextureRegion(Judgement,0,68,256,34);
+        PERFECT = new TextureRegion(Judgement,0,34,256,34);
+        MAX = new TextureRegion(Judgement,0,0,256,34);
+
 
         // set up rectangles
         receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
@@ -103,7 +119,7 @@ public class Gameplay implements Screen {
         sr = new SongReader(level);
         music = Gdx.audio.newMusic(Gdx.files.internal("Songs/" + level + "/" + sr.getSongFileName()));
         bg = new Texture(Gdx.files.internal("Songs/" + level + "/bg.jpg"));
-        music.setVolume(0.3f);
+        music.setVolume(0.2f);
         float musicBuffer = -1;
         if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
         else musicBuffer = 0;
@@ -144,6 +160,7 @@ public class Gameplay implements Screen {
         game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2 - receptors_img.getRegionWidth() / 2 , R_HEIGHT);
         drawInput();
         drawNotes();
+        drawJudgement();
         game.font.draw(game.batch, String.valueOf(nl.COMBO), RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font, String.valueOf(nl.COMBO)) / 2, COMBO_HEIGHT);
         game.ltext.draw(game.batch, "GAMEPLAY", 5, 20);
         game.batch.end();
@@ -208,6 +225,15 @@ public class Gameplay implements Screen {
             else if (note.x == COL3_X) game.batch.draw(note_3, note.x, note.y);
             else if (note.x == COL4_X) game.batch.draw(note_4, note.x, note.y);
         }
+    }
+
+    private void drawJudgement() {
+        if (nl.JUDGEMENT.equals("MISS")) game.batch.draw(MISS, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
+        else if (nl.JUDGEMENT.equals("BAD")) game.batch.draw(BAD, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
+        else if (nl.JUDGEMENT.equals("GOOD")) game.batch.draw(GOOD, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
+        else if (nl.JUDGEMENT.equals("GREAT")) game.batch.draw(GREAT, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
+        else if (nl.JUDGEMENT.equals("PERFECT")) game.batch.draw(PERFECT, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
+        else if (nl.JUDGEMENT.equals("MAX")) game.batch.draw(MAX, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
     }
 
     @Override

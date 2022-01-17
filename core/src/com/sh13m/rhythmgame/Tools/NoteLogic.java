@@ -8,8 +8,9 @@ import com.sh13m.rhythmgame.Screens.Gameplay;
 import java.util.Iterator;
 
 public class NoteLogic {
-    private static float HOLD_CHECK_PERIOD = 0.10f;
+    private static float HOLD_CHECK_PERIOD = 0.15f;
     public int COMBO;
+    public String JUDGEMENT;
 
     private boolean col1isHeld;
     private boolean col2isHeld;
@@ -31,6 +32,7 @@ public class NoteLogic {
 
     public NoteLogic() {
         COMBO = 0;
+        JUDGEMENT = "NONE";
         col1isHeld = false;
         col2isHeld = false;
         col3isHeld = false;
@@ -70,22 +72,27 @@ public class NoteLogic {
             if (note.y + 64 < 0) {
                 iter.remove();
                 COMBO = 0;
+                JUDGEMENT = "MISS";
             }
             // remove notes if they are successfully hit
             if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
                 iter.remove();
+                getJudgement(note.y);
                 COMBO++;
             }
             if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
                 iter.remove();
+                getJudgement(note.y);
                 COMBO++;
             }
             if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
                 iter.remove();
+                getJudgement(note.y);
                 COMBO++;
             }
             if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
                 iter.remove();
+                getJudgement(note.y);
                 COMBO++;
             }
         }
@@ -101,11 +108,13 @@ public class NoteLogic {
             if (note.y + 64 < 0) {
                 iter.remove();
                 COMBO = 0;
+                JUDGEMENT = "MISS";
             }
             // hold note head successfully hit
             if (note.overlaps(receptor1)) {
                 if (SongInput.receptor1JustPressed()) {
                     iter.remove();
+                    getJudgement(note.y);
                     COMBO++;
                     col1isHeld = true;
                     col1HoldMissed = false;
@@ -116,6 +125,7 @@ public class NoteLogic {
             if (note.overlaps(receptor2)) {
                 if (SongInput.receptor2JustPressed()) {
                     iter.remove();
+                    getJudgement(note.y);
                     COMBO++;
                     col2isHeld = true;
                     col2HoldMissed = false;
@@ -126,6 +136,7 @@ public class NoteLogic {
             if (note.overlaps(receptor3)) {
                 if (SongInput.receptor3JustPressed()) {
                     iter.remove();
+                    getJudgement(note.y);
                     COMBO++;
                     col3isHeld = true;
                     col3HoldMissed = false;
@@ -136,6 +147,7 @@ public class NoteLogic {
             if (note.overlaps(receptor4)) {
                 if (SongInput.receptor4JustPressed()) {
                     iter.remove();
+                    getJudgement(note.y);
                     COMBO++;
                     col4isHeld = true;
                     col4HoldMissed = false;
@@ -297,5 +309,17 @@ public class NoteLogic {
             if (noteFX.x == Gameplay.COL3_X && !col3isHeld && !col3HoldMissed) iter.remove();
             if (noteFX.x == Gameplay.COL4_X && !col4isHeld && !col4HoldMissed) iter.remove();
         }
+    }
+
+    private void getJudgement(float y) {
+        if (y < (float)Gameplay.R_HEIGHT - 52) JUDGEMENT = "BAD";
+        else if (y < (float)Gameplay.R_HEIGHT - 40) JUDGEMENT = "GOOD";
+        else if (y < (float)Gameplay.R_HEIGHT - 28) JUDGEMENT = "GREAT";
+        else if (y < (float)Gameplay.R_HEIGHT - 14) JUDGEMENT = "PERFECT";
+        else if (y < (float)Gameplay.R_HEIGHT + 14) JUDGEMENT = "MAX";
+        else if (y < (float)Gameplay.R_HEIGHT + 28) JUDGEMENT = "PERFECT";
+        else if (y < (float)Gameplay.R_HEIGHT + 40) JUDGEMENT = "GREAT";
+        else if (y < (float)Gameplay.R_HEIGHT + 52) JUDGEMENT = "GOOD";
+        else if (y < (float)Gameplay.R_HEIGHT + 64) JUDGEMENT = "BAD";
     }
 }
