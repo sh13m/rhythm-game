@@ -28,7 +28,7 @@ public class SongSelect implements Screen {
 
         if (!this.game.menuTheme.isPlaying()) this.game.menuTheme.play();
 
-        selection = 0;
+        selection = 1;
     }
 
     @Override
@@ -46,6 +46,7 @@ public class SongSelect implements Screen {
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         game.ltext.draw(game.batch, "SONG SELECT", 5, 20);
+        game.font.draw(game.batch, String.valueOf(selection), 40, 300);
         game.batch.end();
     }
 
@@ -54,13 +55,23 @@ public class SongSelect implements Screen {
     }
 
     private void handleInput() {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            selection++;
+            if (selection > 7) selection = 1;
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            selection--;
+            if (selection < 1) selection = 7;
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new Menu(game));
             dispose();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            game.setScreen(new Gameplay(game, 1));
+            game.setScreen(new Gameplay(game, selection));
             game.menuTheme.stop();
             dispose();
         }
