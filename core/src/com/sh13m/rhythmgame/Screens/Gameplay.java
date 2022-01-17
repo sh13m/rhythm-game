@@ -29,7 +29,7 @@ public class Gameplay implements Screen {
     public static float COL2_X = RhythmGame.V_WIDTH / 2 - 64;
     public static float COL3_X = RhythmGame.V_WIDTH / 2;
     public static float COL4_X = RhythmGame.V_WIDTH / 2 + 64;
-    private static float HOLD_CHECK_PERIOD = 0.35f;
+    private static float HOLD_CHECK_PERIOD = 0.15f;
 
     // render
     private final RhythmGame game;
@@ -114,7 +114,7 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
-        bg = new Texture(Gdx.files.internal("Songs/7/bg.jpg"));
+        bg = new Texture(Gdx.files.internal("Songs/3/neo bg.png"));
 
         // set up rectangles
         receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
@@ -142,7 +142,7 @@ public class Gameplay implements Screen {
         holdFX = new Array<>();
 
         // set up song data
-        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/7/audio.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/3/Vospi - Neophyte.ogg"));
         music.setVolume(0.3f);
         sr = new SongReader();
         delayedMusicStart = new Timer();
@@ -246,7 +246,6 @@ public class Gameplay implements Screen {
             }
             // hold note head successfully hit
             if (note.overlaps(receptor1)) {
-                col1HoldMissed = true;
                 if (SongInput.receptor1JustPressed()) {
                     iter.remove();
                     combo++;
@@ -257,7 +256,6 @@ public class Gameplay implements Screen {
                 }
             }
             if (note.overlaps(receptor2)) {
-                col2HoldMissed = true;
                 if (SongInput.receptor2JustPressed()) {
                     iter.remove();
                     combo++;
@@ -268,7 +266,6 @@ public class Gameplay implements Screen {
                 }
             }
             if (note.overlaps(receptor3)) {
-                col3HoldMissed = true;
                 if (SongInput.receptor3JustPressed()) {
                     iter.remove();
                     combo++;
@@ -279,7 +276,6 @@ public class Gameplay implements Screen {
                 }
             }
             if (note.overlaps(receptor4)) {
-                col4HoldMissed = true;
                 if (SongInput.receptor4JustPressed()) {
                     iter.remove();
                     combo++;
