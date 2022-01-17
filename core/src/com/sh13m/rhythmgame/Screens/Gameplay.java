@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -80,6 +81,7 @@ public class Gameplay implements Screen {
     private float col2HoldCheckDelta;
     private float col3HoldCheckDelta;
     private float col4HoldCheckDelta;
+    private Array<Rectangle> holdFX;
 
     // temp other
     private int combo;
@@ -137,6 +139,7 @@ public class Gameplay implements Screen {
         col2HoldCheckDelta = 0;
         col3HoldCheckDelta = 0;
         col4HoldCheckDelta = 0;
+        holdFX = new Array<>();
 
         // set up song data
         music = Gdx.audio.newMusic(Gdx.files.internal("Songs/LN/Bluenation.mp3"));
@@ -234,13 +237,13 @@ public class Gameplay implements Screen {
         for (Iterator<Rectangle> iter = sr.hold_notes_start.iterator(); iter.hasNext(); ) {
             Rectangle note = iter.next();
             note.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (note.y + 64 < 0) {
+                // remove notes if they fall off-screen
+                iter.remove();
+                combo = 0;
+            }
 
-            if (note.y + 64 < R_HEIGHT) {
-                if (note.y + 64 < 0) {
-                    // remove notes if they fall off-screen
-                    iter.remove();
-                    combo = 0;
-                }
+            if (note.y + 65 < R_HEIGHT) {
                 // window to hit hold note has been missed
                 if (note.x == COL1_X) {
                     col1isHeld = false;
@@ -269,24 +272,32 @@ public class Gameplay implements Screen {
                 combo++;
                 col1isHeld = true;
                 col1HoldMissed = false;
+                Rectangle noteFX = new Rectangle(COL1_X, R_HEIGHT,64,64);
+                holdFX.add(noteFX);
             }
             if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
                 iter.remove();
                 combo++;
                 col2isHeld = true;
                 col2HoldMissed = false;
+                Rectangle noteFX = new Rectangle(COL2_X, R_HEIGHT,64,64);
+                holdFX.add(noteFX);
             }
             if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
                 iter.remove();
                 combo++;
                 col3isHeld = true;
                 col3HoldMissed = false;
+                Rectangle noteFX = new Rectangle(COL3_X, R_HEIGHT,64,64);
+                holdFX.add(noteFX);
             }
             if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
                 iter.remove();
                 combo++;
                 col4isHeld = true;
                 col4HoldMissed = false;
+                Rectangle noteFX = new Rectangle(COL4_X, R_HEIGHT,64,64);
+                holdFX.add(noteFX);
             }
         }
         // update hold bars
@@ -371,7 +382,6 @@ public class Gameplay implements Screen {
                 col4HoldCheckDelta -= HOLD_CHECK_PERIOD;
             }
         }
-
         // update hold end
         for (Iterator<Rectangle> iter = sr.hold_notes_end.iterator(); iter.hasNext(); ) {
             Rectangle end = iter.next();
@@ -400,6 +410,19 @@ public class Gameplay implements Screen {
                     col4HoldCheckDelta = 0;
                 }
             }
+        }
+        // update holdFX
+        for (Iterator<Rectangle> iter = holdFX.iterator(); iter.hasNext(); ) {
+            Rectangle noteFX = iter.next();
+            if (noteFX.y + 64 < 0) iter.remove();
+            if (noteFX.x == COL1_X && col1HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL2_X && col2HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL3_X && col3HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL4_X && col4HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL1_X && !col1isHeld && !col1HoldMissed) iter.remove();
+            if (noteFX.x == COL2_X && !col2isHeld && !col2HoldMissed) iter.remove();
+            if (noteFX.x == COL3_X && !col3isHeld && !col3HoldMissed) iter.remove();
+            if (noteFX.x == COL4_X && !col4isHeld && !col4HoldMissed) iter.remove();
         }
     }
 
@@ -433,6 +456,13 @@ public class Gameplay implements Screen {
         }
         // hold note heads
         for (Rectangle note : sr.hold_notes_start) {
+            if (note.x == COL1_X) game.batch.draw(note_1, note.x, note.y);
+            else if (note.x == COL2_X) game.batch.draw(note_2, note.x, note.y);
+            else if (note.x == COL3_X) game.batch.draw(note_3, note.x, note.y);
+            else if (note.x == COL4_X) game.batch.draw(note_4, note.x, note.y);
+        }
+        // hold note FX
+        for (Rectangle note : holdFX) {
             if (note.x == COL1_X) game.batch.draw(note_1, note.x, note.y);
             else if (note.x == COL2_X) game.batch.draw(note_2, note.x, note.y);
             else if (note.x == COL3_X) game.batch.draw(note_3, note.x, note.y);
