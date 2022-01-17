@@ -199,7 +199,7 @@ public class SongReader {
 
     private void createHoldNoteEnd(int i) {
         if (col1.get(i).equals('3')) {
-            Rectangle end = new Rectangle(Gameplay.COL1_X, 512 + i * incrementLength,64, incrementLength);
+            Rectangle end = new Rectangle(Gameplay.COL1_X, 512 + i * incrementLength,64, incrementLength*1.05f);
             hold_notes_end.add(end);
             isDrawingCol1Bar = false;
         }

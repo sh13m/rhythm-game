@@ -243,56 +243,68 @@ public class Gameplay implements Screen {
                 combo = 0;
             }
             // hold note head successfully hit
-            if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
-                iter.remove();
-                combo++;
-                col1isHeld = true;
-                col1HoldMissed = false;
-                Rectangle noteFX = new Rectangle(COL1_X, R_HEIGHT,64,64);
-                holdFX.add(noteFX);
+            if (note.overlaps(receptor1)) {
+                col1HoldMissed = true;
+                if (SongInput.receptor1JustPressed()) {
+                    iter.remove();
+                    combo++;
+                    col1isHeld = true;
+                    col1HoldMissed = false;
+                    Rectangle noteFX = new Rectangle(COL1_X, R_HEIGHT, 64, 64);
+                    holdFX.add(noteFX);
+                }
             }
-            if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
-                iter.remove();
-                combo++;
-                col2isHeld = true;
-                col2HoldMissed = false;
-                Rectangle noteFX = new Rectangle(COL2_X, R_HEIGHT,64,64);
-                holdFX.add(noteFX);
+            if (note.overlaps(receptor2)) {
+                col2HoldMissed = true;
+                if (SongInput.receptor2JustPressed()) {
+                    iter.remove();
+                    combo++;
+                    col2isHeld = true;
+                    col2HoldMissed = false;
+                    Rectangle noteFX = new Rectangle(COL2_X, R_HEIGHT, 64, 64);
+                    holdFX.add(noteFX);
+                }
             }
-            if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
-                iter.remove();
-                combo++;
-                col3isHeld = true;
-                col3HoldMissed = false;
-                Rectangle noteFX = new Rectangle(COL3_X, R_HEIGHT,64,64);
-                holdFX.add(noteFX);
+            if (note.overlaps(receptor3)) {
+                col3HoldMissed = true;
+                if (SongInput.receptor3JustPressed()) {
+                    iter.remove();
+                    combo++;
+                    col3isHeld = true;
+                    col3HoldMissed = false;
+                    Rectangle noteFX = new Rectangle(COL3_X, R_HEIGHT, 64, 64);
+                    holdFX.add(noteFX);
+                }
             }
-            if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
-                iter.remove();
-                combo++;
-                col4isHeld = true;
-                col4HoldMissed = false;
-                Rectangle noteFX = new Rectangle(COL4_X, R_HEIGHT,64,64);
-                holdFX.add(noteFX);
+            if (note.overlaps(receptor4)) {
+                col4HoldMissed = true;
+                if (SongInput.receptor4JustPressed()) {
+                    iter.remove();
+                    combo++;
+                    col4isHeld = true;
+                    col4HoldMissed = false;
+                    Rectangle noteFX = new Rectangle(COL4_X, R_HEIGHT, 64, 64);
+                    holdFX.add(noteFX);
+                }
             }
             // window to hit hold note has been missed
             if (note.y + 64 < R_HEIGHT) {
-                if (note.x == COL1_X) {
+                if (note.x == COL1_X && !col1isHeld) {
                     col1isHeld = false;
                     col1HoldMissed = true;
                     col1HoldComboBreak = false;
                 }
-                if (note.x == COL2_X) {
+                if (note.x == COL2_X && !col2isHeld) {
                     col2isHeld = false;
                     col2HoldMissed = true;
                     col2HoldComboBreak = false;
                 }
-                if (note.x == COL3_X) {
+                if (note.x == COL3_X && !col3isHeld) {
                     col3isHeld = false;
                     col3HoldMissed = true;
                     col3HoldComboBreak = false;
                 }
-                if (note.x == COL4_X) {
+                if (note.x == COL4_X && !col4isHeld) {
                     col4isHeld = false;
                     col4HoldMissed = true;
                     col4HoldComboBreak = false;
@@ -414,10 +426,10 @@ public class Gameplay implements Screen {
         for (Iterator<Rectangle> iter = holdFX.iterator(); iter.hasNext(); ) {
             Rectangle noteFX = iter.next();
             if (noteFX.y + 64 < 0) iter.remove();
-            if (noteFX.x == COL1_X && col1HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (noteFX.x == COL2_X && col2HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (noteFX.x == COL3_X && col3HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            if (noteFX.x == COL4_X && col4HoldMissed) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL1_X && (col1HoldComboBreak || noteFX.y + 64 < R_HEIGHT)) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL2_X && (col2HoldComboBreak || noteFX.y + 64 < R_HEIGHT)) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL3_X && (col3HoldComboBreak || noteFX.y + 64 < R_HEIGHT)) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+            if (noteFX.x == COL4_X && (col4HoldComboBreak || noteFX.y + 64 < R_HEIGHT)) noteFX.y -= SCROLL_SPEED * Gdx.graphics.getDeltaTime();
             if (noteFX.x == COL1_X && !col1isHeld && !col1HoldMissed) iter.remove();
             if (noteFX.x == COL2_X && !col2isHeld && !col2HoldMissed) iter.remove();
             if (noteFX.x == COL3_X && !col3isHeld && !col3HoldMissed) iter.remove();
