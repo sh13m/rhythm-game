@@ -66,7 +66,7 @@ public class Gameplay implements Screen {
     private final Timer delayedNoteStart;
     private NoteLogic nl;
 
-    public Gameplay(RhythmGame game) {
+    public Gameplay(RhythmGame game, int level) {
         this.game = game;
         // sets the cursor invisible
         pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
@@ -99,27 +99,28 @@ public class Gameplay implements Screen {
         receptor4 = new Rectangle(COL4_X, R_HEIGHT,64,64);
 
         // set up song data
-        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/2/audio.ogg"));
-        bg = new Texture(Gdx.files.internal("Songs/2/bg.png"));
+        nl = new NoteLogic();
+        sr = new SongReader(level);
+        music = Gdx.audio.newMusic(Gdx.files.internal("Songs/" + level + "/" + sr.getSongFileName()));
+        bg = new Texture(Gdx.files.internal("Songs/" + level + "/bg.jpg"));
         music.setVolume(0.3f);
-        sr = new SongReader();
+        float musicBuffer = -1;
+        if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
+        else musicBuffer = 0;
         delayedMusicStart = new Timer();
         delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 music.play();
             }
-        }, GLOBAL_DELAY + sr.offset);
+        }, GLOBAL_DELAY + musicBuffer + sr.offset);
         delayedNoteStart = new Timer();
         delayedNoteStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 START = true;
             }
-        }, GLOBAL_DELAY - SCROLL_OFFSET);
-
-        // temp
-        nl = new NoteLogic();
+        }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET);
     }
 
     @Override
@@ -152,8 +153,8 @@ public class Gameplay implements Screen {
         handleInput();
         if (!sr.songEnded && START) {
             sr.parseMeasure(delta);
-            nl.updateNotes(delta, sr, receptor1, receptor2, receptor3, receptor4);
         }
+        nl.updateNotes(delta, sr, receptor1, receptor2, receptor3, receptor4);
 
     }
 

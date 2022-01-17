@@ -60,7 +60,7 @@ public class SongSelect implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            game.setScreen(new Gameplay(game));
+            game.setScreen(new Gameplay(game, 1));
             game.menuTheme.stop();
             dispose();
         }

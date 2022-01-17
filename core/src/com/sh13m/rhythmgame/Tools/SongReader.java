@@ -39,8 +39,8 @@ public class SongReader {
     public Array<Rectangle> hold_bars;
     public Array<Rectangle> hold_notes_end;
 
-    public SongReader() {
-        songFile = Gdx.files.internal("Songs/2/map.sm");
+    public SongReader(int level) {
+        songFile = Gdx.files.internal("Songs/" + level + "/map.sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getNoteDataStart();
         getOffset();
@@ -252,5 +252,16 @@ public class SongReader {
                 break;
             }
         }
+    }
+
+    public String getSongFileName() {
+        String name = "";
+        for (String line : fileLines) {
+            if (line.contains("#MUSIC:")) {
+                name = line.substring(7, line.length()-1);
+                break;
+            }
+        }
+        return name;
     }
 }
