@@ -3,11 +3,12 @@ package com.sh13m.rhythmgame.Tools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.sh13m.rhythmgame.Screens.Gameplay;
 
 import java.util.Iterator;
 
-public class NoteLogic {
+public class NoteLogic implements Pool.Poolable {
     private static float HOLD_CHECK_PERIOD = 0.15f;
     public int COMBO;
     public String JUDGEMENT;
@@ -321,5 +322,10 @@ public class NoteLogic {
         else if (y < (float)Gameplay.R_HEIGHT + 42) JUDGEMENT = "GREAT";
         else if (y < (float)Gameplay.R_HEIGHT + 54) JUDGEMENT = "GOOD";
         else if (y < (float)Gameplay.R_HEIGHT + 64) JUDGEMENT = "BAD";
+    }
+
+    @Override
+    public void reset() {
+
     }
 }
