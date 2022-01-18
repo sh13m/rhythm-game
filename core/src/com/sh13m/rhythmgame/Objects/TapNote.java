@@ -42,7 +42,7 @@ public class TapNote implements Pool.Poolable{
 
     @Override
     public void reset() {
-        note.set(9999,9999,1,1);
+        note.set(0,0,0,0);
         alive = false;
         comboBreak = false;
         comboAdd = false;

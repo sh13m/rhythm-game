@@ -32,13 +32,13 @@ public class SongReader {
 
     private int currentLine;
 
-    private float measureLength;
+    private final float measureLength;
     private float incrementLength;
 
-    private Array<Character> col1, col2, col3, col4;
+    private final Array<Character> col1, col2, col3, col4;
 
-    public Array<TapNote> activeTapNotes = new Array<>();
-    public Pool<TapNote> tapNotePool = new Pool<TapNote>() {
+    public final Array<TapNote> activeTapNotes = new Array<>();
+    public final Pool<TapNote> tapNotePool = new Pool<TapNote>() {
         @Override
         protected TapNote newObject() {
             return new TapNote();
