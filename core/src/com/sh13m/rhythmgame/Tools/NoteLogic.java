@@ -190,16 +190,16 @@ public class NoteLogic {
                 if (bar.y + bar.height < 0) iter.remove();
 
                 // bar is held and not missed
-                if (bar.x == Gameplay.COL1_X && !col1HoldMissed && bar.y < Gameplay.R_HEIGHT + 32) {
+                if (bar.x == Gameplay.COL1_X && !col1HoldMissed && bar.y < Gameplay.R_HEIGHT + 30) {
                     iter.remove();
                 }
-                if (bar.x == Gameplay.COL2_X && !col2HoldMissed &&  bar.y < Gameplay.R_HEIGHT + 32) {
+                if (bar.x == Gameplay.COL2_X && !col2HoldMissed &&  bar.y < Gameplay.R_HEIGHT + 30) {
                     iter.remove();
                 }
-                if (bar.x == Gameplay.COL3_X && !col3HoldMissed && bar.y < Gameplay.R_HEIGHT + 32) {
+                if (bar.x == Gameplay.COL3_X && !col3HoldMissed && bar.y < Gameplay.R_HEIGHT + 30) {
                     iter.remove();
                 }
-                if (bar.x == Gameplay.COL4_X && !col4HoldMissed && bar.y < Gameplay.R_HEIGHT + 32) {
+                if (bar.x == Gameplay.COL4_X && !col4HoldMissed && bar.y < Gameplay.R_HEIGHT + 30) {
                     iter.remove();
                 }
             } catch (ArrayIndexOutOfBoundsException e){
