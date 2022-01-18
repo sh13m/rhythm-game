@@ -312,14 +312,14 @@ public class NoteLogic {
     }
 
     private void getJudgement(float y) {
-        if (y < (float)Gameplay.R_HEIGHT - 52) JUDGEMENT = "BAD";
-        else if (y < (float)Gameplay.R_HEIGHT - 40) JUDGEMENT = "GOOD";
+        if (y < (float)Gameplay.R_HEIGHT - 54) JUDGEMENT = "BAD";
+        else if (y < (float)Gameplay.R_HEIGHT - 42) JUDGEMENT = "GOOD";
         else if (y < (float)Gameplay.R_HEIGHT - 28) JUDGEMENT = "GREAT";
         else if (y < (float)Gameplay.R_HEIGHT - 14) JUDGEMENT = "PERFECT";
         else if (y < (float)Gameplay.R_HEIGHT + 14) JUDGEMENT = "MAX";
         else if (y < (float)Gameplay.R_HEIGHT + 28) JUDGEMENT = "PERFECT";
-        else if (y < (float)Gameplay.R_HEIGHT + 40) JUDGEMENT = "GREAT";
-        else if (y < (float)Gameplay.R_HEIGHT + 52) JUDGEMENT = "GOOD";
+        else if (y < (float)Gameplay.R_HEIGHT + 42) JUDGEMENT = "GREAT";
+        else if (y < (float)Gameplay.R_HEIGHT + 54) JUDGEMENT = "GOOD";
         else if (y < (float)Gameplay.R_HEIGHT + 64) JUDGEMENT = "BAD";
     }
 }
