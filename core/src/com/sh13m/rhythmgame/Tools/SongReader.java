@@ -44,7 +44,6 @@ public class SongReader {
             return new TapNote();
         }
     };
-
     public Array<Rectangle> hold_notes_start;
     public Array<Rectangle> hold_bars;
     public Array<Rectangle> hold_notes_end;
