@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
+import com.sh13m.rhythmgame.Objects.TapNote;
 import com.sh13m.rhythmgame.Screens.Gameplay;
 
 // not all features of the sm file are implemented in this game
@@ -34,7 +36,15 @@ public class SongReader {
     private float incrementLength;
 
     private Array<Character> col1, col2, col3, col4;
-    public Array<Rectangle> tap_notes;
+
+    public Array<TapNote> activeTapNotes = new Array<>();
+    public Pool<TapNote> tapNotePool = new Pool<TapNote>() {
+        @Override
+        protected TapNote newObject() {
+            return new TapNote();
+        }
+    };
+
     public Array<Rectangle> hold_notes_start;
     public Array<Rectangle> hold_bars;
     public Array<Rectangle> hold_notes_end;
@@ -46,7 +56,6 @@ public class SongReader {
         getOffset();
         getBPM();
 
-        tap_notes = new Array<>();
         hold_notes_start = new Array<>();
         hold_bars = new Array<>();
         hold_notes_end = new Array<>();
@@ -119,20 +128,24 @@ public class SongReader {
     private void createTapNotes(int i) {
         // creates an adds a note to its corresponding array
         if (col1.get(i).equals('1')) {
-            Rectangle note = new Rectangle(Gameplay.COL1_X, 480 + i * incrementLength,64,64);
-            tap_notes.add(note);
+            TapNote note = tapNotePool.obtain();
+            note.init(Gameplay.COL1_X, 480 + i * incrementLength,64,64);
+            activeTapNotes.add(note);
         }
         if (col2.get(i).equals('1')) {
-            Rectangle note = new Rectangle(Gameplay.COL2_X, 480 + i * incrementLength,64,64);
-            tap_notes.add(note);
+            TapNote note = tapNotePool.obtain();
+            note.init(Gameplay.COL2_X, 480 + i * incrementLength,64,64);
+            activeTapNotes.add(note);
         }
         if (col3.get(i).equals('1')) {
-            Rectangle note = new Rectangle(Gameplay.COL3_X, 480 + i * incrementLength,64,64);
-            tap_notes.add(note);
+            TapNote note = tapNotePool.obtain();
+            note.init(Gameplay.COL3_X, 480 + i * incrementLength,64,64);
+            activeTapNotes.add(note);
         }
         if (col4.get(i).equals('1')) {
-            Rectangle note = new Rectangle(Gameplay.COL4_X, 480 + i * incrementLength,64,64);
-            tap_notes.add(note);
+            TapNote note = tapNotePool.obtain();
+            note.init(Gameplay.COL4_X, 480 + i * incrementLength,64,64);
+            activeTapNotes.add(note);
         }
     }
 

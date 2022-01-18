@@ -3,12 +3,12 @@ package com.sh13m.rhythmgame.Tools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
+import com.sh13m.rhythmgame.Objects.TapNote;
 import com.sh13m.rhythmgame.Screens.Gameplay;
 
 import java.util.Iterator;
 
-public class NoteLogic implements Pool.Poolable {
+public class NoteLogic {
     private static float HOLD_CHECK_PERIOD = 0.15f;
     public int COMBO;
     public String JUDGEMENT;
@@ -66,37 +66,21 @@ public class NoteLogic implements Pool.Poolable {
     private void updateTapNotes(SongReader sr,
                                 Rectangle receptor1, Rectangle receptor2,
                                 Rectangle receptor3, Rectangle receptor4) {
-        for (Iterator<Rectangle> iter = sr.tap_notes.iterator(); iter.hasNext(); ) {
-            Rectangle note = iter.next();
-            note.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-            // remove notes if they fall off-screen
-            if (note.y + 64 < 0) {
-                iter.remove();
-                COMBO = 0;
-                JUDGEMENT = "MISS";
-            }
-            // remove notes if they are successfully hit
-            if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
-                iter.remove();
-                getJudgement(note.y);
-                COMBO++;
-            }
-            if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
-                iter.remove();
-                getJudgement(note.y);
-                COMBO++;
-            }
-            if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
-                iter.remove();
-                getJudgement(note.y);
-                COMBO++;
-            }
-            if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
-                iter.remove();
-                getJudgement(note.y);
-                COMBO++;
+        TapNote note;
+        int len = sr.activeTapNotes.size;
+        for (int i=len; --i >= 0; ) {
+            note = sr.activeTapNotes.get(i);
+            note.update(receptor1, receptor2, receptor3, receptor4);
+            if (note.comboAdd) COMBO++;
+            if (note.comboBreak) COMBO = 0;
+            if (note.missed) JUDGEMENT = "MISS";
+            if (note.hit) getJudgement(note.getY());
+            if (!note.alive) {
+                sr.activeTapNotes.removeIndex(i);
+                sr.tapNotePool.free(note);
             }
         }
+
     }
 
     private void updateHoldNoteHeads(SongReader sr,
@@ -322,10 +306,5 @@ public class NoteLogic implements Pool.Poolable {
         else if (y < (float)Gameplay.R_HEIGHT + 42) JUDGEMENT = "GREAT";
         else if (y < (float)Gameplay.R_HEIGHT + 54) JUDGEMENT = "GOOD";
         else if (y < (float)Gameplay.R_HEIGHT + 64) JUDGEMENT = "BAD";
-    }
-
-    @Override
-    public void reset() {
-
     }
 }

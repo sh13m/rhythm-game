@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sh13m.rhythmgame.Objects.TapNote;
 import com.sh13m.rhythmgame.RhythmGame;
 import com.sh13m.rhythmgame.Tools.NoteLogic;
 import com.sh13m.rhythmgame.Tools.SongInput;
@@ -205,11 +206,11 @@ public class Gameplay implements Screen {
             game.batch.draw(hold_bar_img, bar.x, bar.y, bar.width, bar.height);
         }
         // tap notes
-        for (Rectangle note : sr.tap_notes) {
-            if (note.x == COL1_X) game.batch.draw(note_1, note.x, note.y);
-            else if (note.x == COL2_X) game.batch.draw(note_2, note.x, note.y);
-            else if (note.x == COL3_X) game.batch.draw(note_3, note.x, note.y);
-            else if (note.x == COL4_X) game.batch.draw(note_4, note.x, note.y);
+        for (TapNote note : sr.activeTapNotes) {
+            if (note.getX() == COL1_X) game.batch.draw(note_1, note.getX(), note.getY());
+            else if (note.getX() == COL2_X) game.batch.draw(note_2, note.getX(), note.getY());
+            else if (note.getX() == COL3_X) game.batch.draw(note_3, note.getX(), note.getY());
+            else if (note.getX() == COL4_X) game.batch.draw(note_4, note.getX(), note.getY());
         }
         // hold note heads
         for (Rectangle note : sr.hold_notes_start) {
