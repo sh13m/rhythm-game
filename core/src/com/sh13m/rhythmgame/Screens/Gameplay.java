@@ -207,6 +207,10 @@ public class Gameplay implements Screen {
             else if (note.getX() == COL3_X) game.batch.draw(note_3, note.getX(), note.getY());
             else if (note.getX() == COL4_X) game.batch.draw(note_4, note.getX(), note.getY());
         }
+        // bars
+        for (Bar bar : sr.activeBars) {
+            game.batch.draw(hold_bar_img, bar.getX(), bar.getY(), bar.getWidth(), bar.getHeight());
+        }
         // hold heads
         for (Head head : sr.activeHeads) {
             if (head.getX() == COL1_X) game.batch.draw(note_1, head.getX(), head.getY());
@@ -214,20 +218,6 @@ public class Gameplay implements Screen {
             else if (head.getX() == COL3_X) game.batch.draw(note_3, head.getX(), head.getY());
             else if (head.getX() == COL4_X) game.batch.draw(note_4, head.getX(), head.getY());
         }
-        // bars
-        for (Bar bar : sr.activeBars) {
-            game.batch.draw(hold_bar_img, bar.getX(), bar.getY(), bar.getWidth(), bar.getHeight());
-        }
-        // hold ends TEMP
-        /*
-        for (End end : sr.activeEnds) {
-            if (end.getX() == COL1_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
-            else if (end.getX() == COL2_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
-            else if (end.getX() == COL3_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
-            else if (end.getX() == COL4_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
-        }
-
-         */
     }
 
     private void drawJudgement() {
