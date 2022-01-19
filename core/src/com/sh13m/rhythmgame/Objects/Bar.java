@@ -27,6 +27,11 @@ public class Bar implements Pool.Poolable {
         return bar.y;
     }
 
+
+    public void setHeight(float height) {
+        bar.height = height;
+    }
+
     public float getWidth() {
         return bar.width;
     }
@@ -37,11 +42,12 @@ public class Bar implements Pool.Poolable {
 
     @Override
     public void reset() {
-        bar.set(9999,9999,1,1);
+        bar.set(0,0,0,0);
         alive = false;
     }
 
     public void update() {
         bar.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
+        if (bar.y + bar.height < 0) alive = false;
     }
 }

@@ -12,7 +12,7 @@ public class TapNote implements Pool.Poolable{
     public boolean comboBreak;
     public boolean comboAdd;
     public boolean missed;
-    public boolean hit;
+    public boolean isHit;
 
     public TapNote() {
         this.note = new Rectangle();
@@ -20,7 +20,7 @@ public class TapNote implements Pool.Poolable{
         this.comboBreak = false;
         this.comboAdd = false;
         this.missed = false;
-        this.hit = false;
+        this.isHit = false;
     }
 
     public void init(float x, float y, float width, float height) {
@@ -29,7 +29,7 @@ public class TapNote implements Pool.Poolable{
         comboBreak = false;
         comboAdd = false;
         missed = false;
-        hit = false;
+        isHit = false;
     }
 
     public float getX() {
@@ -47,7 +47,7 @@ public class TapNote implements Pool.Poolable{
         comboBreak = false;
         comboAdd = false;
         missed = false;
-        hit = false;
+        isHit = false;
     }
 
     public void update(Rectangle receptor1, Rectangle receptor2,
@@ -63,22 +63,22 @@ public class TapNote implements Pool.Poolable{
         if (note.overlaps(receptor1) && SongInput.receptor1JustPressed()) {
             alive = false;
             comboAdd = true;
-            hit = true;
+            isHit = true;
         }
         if (note.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
             alive = false;
             comboAdd = true;
-            hit = true;
+            isHit = true;
         }
         if (note.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
             alive = false;
             comboAdd = true;
-            hit = true;
+            isHit = true;
         }
         if (note.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
             alive = false;
             comboAdd = true;
-            hit = true;
+            isHit = true;
         }
     }
 }

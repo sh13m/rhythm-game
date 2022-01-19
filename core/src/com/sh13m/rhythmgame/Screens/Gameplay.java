@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sh13m.rhythmgame.Objects.Bar;
+import com.sh13m.rhythmgame.Objects.Head;
 import com.sh13m.rhythmgame.Objects.TapNote;
 import com.sh13m.rhythmgame.RhythmGame;
 import com.sh13m.rhythmgame.Tools.NoteLogic;
@@ -135,7 +137,7 @@ public class Gameplay implements Screen {
         delayedNoteStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
-                START = true;
+                sr.parseMeasure();
             }
         }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET);
     }
@@ -169,10 +171,7 @@ public class Gameplay implements Screen {
 
     private void update(float delta) {
         handleInput();
-        if (!sr.songEnded && START) {
-            sr.parseMeasure(delta);
-        }
-        nl.updateNotes(delta, sr, receptor1, receptor2, receptor3, receptor4);
+        nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
 
     }
 
@@ -208,6 +207,27 @@ public class Gameplay implements Screen {
             else if (note.getX() == COL3_X) game.batch.draw(note_3, note.getX(), note.getY());
             else if (note.getX() == COL4_X) game.batch.draw(note_4, note.getX(), note.getY());
         }
+        // hold heads
+        for (Head head : sr.activeHeads) {
+            if (head.getX() == COL1_X) game.batch.draw(note_1, head.getX(), head.getY());
+            else if (head.getX() == COL2_X) game.batch.draw(note_2, head.getX(), head.getY());
+            else if (head.getX() == COL3_X) game.batch.draw(note_3, head.getX(), head.getY());
+            else if (head.getX() == COL4_X) game.batch.draw(note_4, head.getX(), head.getY());
+        }
+        // bars
+        for (Bar bar : sr.activeBars) {
+            game.batch.draw(hold_bar_img, bar.getX(), bar.getY(), bar.getWidth(), bar.getHeight());
+        }
+        // hold ends TEMP
+        /*
+        for (End end : sr.activeEnds) {
+            if (end.getX() == COL1_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
+            else if (end.getX() == COL2_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
+            else if (end.getX() == COL3_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
+            else if (end.getX() == COL4_X) game.batch.draw(note_clicked_1, end.getX(), end.getY());
+        }
+
+         */
     }
 
     private void drawJudgement() {
