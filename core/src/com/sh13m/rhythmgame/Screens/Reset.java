@@ -4,27 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sh13m.rhythmgame.RhythmGame;
 import com.sh13m.rhythmgame.Tools.TextUtil;
 
 public class Reset implements Screen {
     // render
     private final RhythmGame game;
-    private final Viewport viewport;
-    private final OrthographicCamera cam;
 
     private int selection;
 
     public Reset(RhythmGame game) {
         this.game = game;
-
-        // set up cam
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
-        viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 
         selection = 0;
     }
@@ -40,7 +30,7 @@ public class Reset implements Screen {
         Gdx.gl.glClearColor(0.1f,0.1f,0.1f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-        game.batch.setProjectionMatrix(cam.combined);
+        game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
         drawResetText();
         drawSelectionText();
@@ -119,7 +109,7 @@ public class Reset implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        game.viewport.update(width, height);
     }
 
     @Override

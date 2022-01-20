@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sh13m.rhythmgame.Objects.Bar;
 import com.sh13m.rhythmgame.Objects.Head;
 import com.sh13m.rhythmgame.Objects.TapNote;
@@ -32,11 +31,7 @@ public class Gameplay implements Screen {
     public static float COL3_X = RhythmGame.V_WIDTH / 2f;
     public static float COL4_X = RhythmGame.V_WIDTH / 2f + 64;
 
-    // render
     private final RhythmGame game;
-    private final Viewport viewport;
-    private final OrthographicCamera cam;
-
 
     // textures
     private final Texture note_img;
@@ -77,12 +72,6 @@ public class Gameplay implements Screen {
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
-
-
-        // set up camera
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
-        viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 
         // set up textures
         note_img = new Texture(Gdx.files.internal("Graphics/notes.png"));
@@ -149,7 +138,7 @@ public class Gameplay implements Screen {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-        game.batch.setProjectionMatrix(cam.combined);
+        game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
         game.batch.setColor(1,1,1,0.2f);
         game.batch.draw(bg, RhythmGame.V_WIDTH/2f - (480f*bg.getWidth()/bg.getHeight())/2f,0,480f*bg.getWidth()/bg.getHeight(),480);
@@ -240,7 +229,7 @@ public class Gameplay implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        game.viewport.update(width, height);
     }
 
     @Override

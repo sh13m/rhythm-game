@@ -6,19 +6,24 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sh13m.rhythmgame.Screens.Menu;
 
 public class RhythmGame extends Game {
 	private Graphics.DisplayMode displayMode;
 	private boolean isFullScreen;
-	public static final Integer V_WIDTH = 640;
+	public static Integer V_WIDTH;
 	public static final Integer V_HEIGHT = 480;
 
 	public ShapeRenderer shapeRenderer;
 	public SpriteBatch batch;
+	public Viewport viewport;
+	public OrthographicCamera cam;
 	public BitmapFont font;
 	public BitmapFont smalltext;
 
@@ -28,9 +33,13 @@ public class RhythmGame extends Game {
 	@Override
 	public void create() {
 		displayMode = Gdx.graphics.getDisplayMode();
+		V_WIDTH = 480*displayMode.width/displayMode.height;
 		isFullScreen = false;
 
 		batch = new SpriteBatch();
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+		viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setAutoShapeType(true);
 

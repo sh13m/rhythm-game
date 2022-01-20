@@ -3,17 +3,16 @@ package com.sh13m.rhythmgame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.sh13m.rhythmgame.RhythmGame;
 import com.sh13m.rhythmgame.Tools.TextUtil;
 
 public class Menu implements Screen {
     // render
     private final RhythmGame game;
-    private final Viewport viewport;
-    private final OrthographicCamera cam;
     private final Pixmap pm;
     private final Cursor cursor;
 
@@ -31,11 +30,6 @@ public class Menu implements Screen {
         logo = new Texture("Graphics/logo.png");
         timeSinceClick = 0;
         selected = false;
-
-        // set up cam
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
-        viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 
         // sets cursor invisible
         pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
@@ -57,7 +51,7 @@ public class Menu implements Screen {
         Gdx.gl.glClearColor(0.1f,0.1f,0.1f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-        game.batch.setProjectionMatrix(cam.combined);
+        game.batch.setProjectionMatrix(game.cam.combined);
 
         game.batch.begin();
         game.batch.draw(logo, RhythmGame.V_WIDTH / 2 - logo.getWidth() / 2, 300);
@@ -148,7 +142,7 @@ public class Menu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        game.viewport.update(width, height);
     }
 
     @Override
