@@ -14,6 +14,7 @@ public class Head implements Pool.Poolable {
     public boolean missed;
     public boolean isHit;
     public boolean isHeld;
+    public boolean gotJudgement;
 
     public Head() {
         this.head = new Rectangle();
@@ -23,6 +24,7 @@ public class Head implements Pool.Poolable {
         this.missed = false;
         this.isHit = false;
         this.isHeld = false;
+        this.gotJudgement = false;
     }
 
     public void init(float x, float y, float width, float height) {
@@ -33,6 +35,7 @@ public class Head implements Pool.Poolable {
         missed = false;
         isHit = false;
         isHeld = false;
+        gotJudgement = false;
     }
 
     public float getX() {
@@ -73,41 +76,31 @@ public class Head implements Pool.Poolable {
             comboAdd = true;
             isHit = true;
             isHeld = true;
-            head.y = Gameplay.R_HEIGHT;
-        }
-        if (head.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
+        } else if (head.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
             comboAdd = true;
             isHit = true;
             isHeld = true;
-            head.y = Gameplay.R_HEIGHT;
-        }
-        if (head.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
+        } else if (head.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
             comboAdd = true;
             isHit = true;
             isHeld = true;
-            head.y = Gameplay.R_HEIGHT;
-        }
-        if (head.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
+        } else if (head.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
             comboAdd = true;
             isHit = true;
             isHeld = true;
-            head.y = Gameplay.R_HEIGHT;
+        }
+        // makes note stay on receptor while held
+        if (gotJudgement) {
+            isHit = false;
         }
         // note let go too early
         if (head.overlaps(receptor1) && isHeld && !SongInput.receptor1Pressed()) {
-            comboBreak = true;
             isHeld = false;
-        }
-        if (head.overlaps(receptor2) && isHeld && !SongInput.receptor2Pressed()) {
-            comboBreak = true;
+        } else if (head.overlaps(receptor2) && isHeld && !SongInput.receptor2Pressed()) {
             isHeld = false;
-        }
-        if (head.overlaps(receptor3) && isHeld && !SongInput.receptor3Pressed()) {
-            comboBreak = true;
+        } else if (head.overlaps(receptor3) && isHeld && !SongInput.receptor3Pressed()) {
             isHeld = false;
-        }
-        if (head.overlaps(receptor4) && isHeld && !SongInput.receptor4Pressed()) {
-            comboBreak = true;
+        } else if (head.overlaps(receptor4) && isHeld && !SongInput.receptor4Pressed()) {
             isHeld = false;
         }
 

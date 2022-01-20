@@ -68,7 +68,7 @@ public class NoteLogic {
             if (head.isHit) {
                 COMBO++;
                 getJudgement(head.getY());
-                head.isHit = false;
+                head.gotJudgement = true;
             }
             if (!head.alive) {
                 sr.activeHeads.removeIndex(i);
