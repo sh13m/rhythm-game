@@ -24,15 +24,8 @@ public class SongReader {
 
     private boolean lastMeasure;
 
-    public boolean isCreatingCol1Bar;
-    public boolean isCreatingCol2Bar;
-    public boolean isCreatingCol3Bar;
-    public boolean isCreatingCol4Bar;
-    private static Bar col1Bar;
-    private static Bar col2Bar;
-    private static Bar col3Bar;
-    private static Bar col4Bar;
-
+    public boolean isCreatingBar;
+    private static Bar bar;
 
     private int currentLine;
 
@@ -73,7 +66,6 @@ public class SongReader {
     public SongReader(int level) {
         songFile = Gdx.files.internal("Songs/" + level + "/map.sm");
         fileLines = songFile.readString().split("\\r?\\n");
-        getNoteDataStart();
         getOffset();
         getBPM();
 
@@ -82,11 +74,7 @@ public class SongReader {
         col3 = new Array<>();
         col4 = new Array<>();
 
-        isCreatingCol1Bar = false;
-        isCreatingCol2Bar = false;
-        isCreatingCol3Bar = false;
-        isCreatingCol4Bar = false;
-
+        isCreatingBar = false;
         lastMeasure = false;
         measureTime = 1/(bpm / 60 / 4);
         measureLength = Gameplay.SCROLL_SPEED * measureTime;
@@ -117,124 +105,95 @@ public class SongReader {
         incrementLength = measureLength / noteType;
     }
 
-    public void parseMeasure() { // reads entire song now
+    public void parseMeasure() { // reads entire column by column
         float startHeight = 480;
+        getNoteDataStart();
 
         while (!lastMeasure) {
             readMeasure();
             for (int i=0; i < noteType; ++i) {
-                createTapNotes(i, startHeight);
-                createHoldHeads(i, startHeight);
-                createHoldEnds(i, startHeight);
-                createBar();
+                createTapNotes(i, startHeight, col1, Gameplay.COL1_X);
+                createHoldHeads(i, startHeight, col1, Gameplay.COL1_X);
+                createHoldEnds(i, startHeight, col1, Gameplay.COL1_X);
+                extendBar();
+            }
+            startHeight += measureLength;
+        }
+        lastMeasure = false;
+        startHeight = 480;
+        getNoteDataStart();
+        while (!lastMeasure) {
+            readMeasure();
+            for (int i=0; i < noteType; ++i) {
+                createTapNotes(i, startHeight, col2, Gameplay.COL2_X);
+                createHoldHeads(i, startHeight, col2, Gameplay.COL2_X);
+                createHoldEnds(i, startHeight, col2, Gameplay.COL2_X);
+                extendBar();
+            }
+            startHeight += measureLength;
+        }
+        lastMeasure = false;
+        startHeight = 480;
+        getNoteDataStart();
+        while (!lastMeasure) {
+            readMeasure();
+            for (int i=0; i < noteType; ++i) {
+                createTapNotes(i, startHeight, col3, Gameplay.COL3_X);
+                createHoldHeads(i, startHeight, col3, Gameplay.COL3_X);
+                createHoldEnds(i, startHeight, col3, Gameplay.COL3_X);
+                extendBar();
+            }
+            startHeight += measureLength;
+        }
+        lastMeasure = false;
+        startHeight = 480;
+        getNoteDataStart();
+        while (!lastMeasure) {
+            readMeasure();
+            for (int i=0; i < noteType; ++i) {
+                createTapNotes(i, startHeight, col4, Gameplay.COL4_X);
+                createHoldHeads(i, startHeight, col4, Gameplay.COL4_X);
+                createHoldEnds(i, startHeight, col4, Gameplay.COL4_X);
+                extendBar();
             }
             startHeight += measureLength;
         }
     }
 
-    private void createTapNotes(int i, float startHeight) {
+    private void createTapNotes(int i, float startHeight, Array<Character> col, float COL_X) {
         // creates an adds a note to its corresponding array
-        if (col1.get(i).equals('1')) {
+        if (col.get(i).equals('1')) {
             TapNote note = tapNotePool.obtain();
-            note.init(Gameplay.COL1_X, startHeight + i * incrementLength,64,64);
-            activeTapNotes.add(note);
-        }
-        if (col2.get(i).equals('1')) {
-            TapNote note = tapNotePool.obtain();
-            note.init(Gameplay.COL2_X, startHeight + i * incrementLength,64,64);
-            activeTapNotes.add(note);
-        }
-        if (col3.get(i).equals('1')) {
-            TapNote note = tapNotePool.obtain();
-            note.init(Gameplay.COL3_X, startHeight + i * incrementLength,64,64);
-            activeTapNotes.add(note);
-        }
-        if (col4.get(i).equals('1')) {
-            TapNote note = tapNotePool.obtain();
-            note.init(Gameplay.COL4_X, startHeight + i * incrementLength,64,64);
+            note.init(COL_X, startHeight + i * incrementLength,64,64);
             activeTapNotes.add(note);
         }
     }
 
-    private void createHoldHeads(int i, float startHeight) {
-        if (col1.get(i).equals('2') || col1.get(i).equals('4')) {
+    private void createHoldHeads(int i, float startHeight, Array<Character> col, float COL_X) {
+        if (col.get(i).equals('2') || col.get(i).equals('4')) {
             Head note = headPool.obtain();
-            note.init(Gameplay.COL1_X, startHeight + i * incrementLength,64,64);
+            note.init(COL_X, startHeight + i * incrementLength,64,64);
             activeHeads.add(note);
-            col1Bar = barPool.obtain();
-            col1Bar.init(Gameplay.COL1_X, startHeight + 32 + i * incrementLength, 64, 0);
-            isCreatingCol1Bar = true;
-        }
-        if (col2.get(i).equals('2') || col2.get(i).equals('4')) {
-            Head note = headPool.obtain();
-            note.init(Gameplay.COL2_X, startHeight + i * incrementLength,64,64);
-            activeHeads.add(note);
-            col2Bar = barPool.obtain();
-            col2Bar.init(Gameplay.COL2_X, startHeight + 32 + i * incrementLength, 64, 0);
-            isCreatingCol2Bar = true;
-        }
-        if (col3.get(i).equals('2') || col3.get(i).equals('4')) {
-            Head note = headPool.obtain();
-            note.init(Gameplay.COL3_X, startHeight + i * incrementLength,64,64);
-            activeHeads.add(note);
-            col3Bar = barPool.obtain();
-            col3Bar.init(Gameplay.COL3_X, startHeight + 32 + i * incrementLength, 64, 0);
-            isCreatingCol3Bar = true;
-        }
-        if (col4.get(i).equals('2') || col4.get(i).equals('4')) {
-            Head note = headPool.obtain();
-            note.init(Gameplay.COL4_X, startHeight + i * incrementLength,64,64);
-            activeHeads.add(note);
-            col4Bar = barPool.obtain();
-            col4Bar.init(Gameplay.COL4_X, startHeight + 32 + i * incrementLength, 64, 0);
-            isCreatingCol4Bar = true;
+            bar = barPool.obtain();
+            bar.init(COL_X, startHeight + 32 + i * incrementLength, 64, 0);
+            isCreatingBar = true;
         }
     }
 
-    private void createBar() {
+    private void extendBar() {
         // create bars between tape note heads and ends
-        if (isCreatingCol1Bar) {
-            col1Bar.setHeight(col1Bar.getHeight() + incrementLength);
-        }
-        if (isCreatingCol2Bar) {
-            col2Bar.setHeight(col2Bar.getHeight() + incrementLength);
-        }
-        if (isCreatingCol3Bar) {
-            col3Bar.setHeight(col3Bar.getHeight() + incrementLength);
-        }
-        if (isCreatingCol4Bar) {
-            col4Bar.setHeight(col4Bar.getHeight() + incrementLength);
+        if (isCreatingBar) {
+            bar.setHeight(bar.getHeight() + incrementLength);
         }
     }
 
-    private void createHoldEnds(int i, float startHeight) {
-        if (col1.get(i).equals('3')) {
+    private void createHoldEnds(int i, float startHeight, Array<Character> col, float COL_X) {
+        if (col.get(i).equals('3')) {
             End end = endPool.obtain();
-            end.init(Gameplay.COL1_X, startHeight + i * incrementLength,64, incrementLength);
+            end.init(COL_X, startHeight + 32 + i * incrementLength,64, incrementLength);
             activeEnds.add(end);
-            isCreatingCol1Bar = false;
-            activeBars.add(col1Bar);
-        }
-        if (col2.get(i).equals('3')) {
-            End end = endPool.obtain();
-            end.init(Gameplay.COL2_X, startHeight + i * incrementLength,64, incrementLength);
-            activeEnds.add(end);
-            isCreatingCol2Bar = false;
-            activeBars.add(col2Bar);
-        }
-        if (col3.get(i).equals('3')) {
-            End end = endPool.obtain();
-            end.init(Gameplay.COL3_X, startHeight + i * incrementLength,64, incrementLength);
-            activeEnds.add(end);
-            isCreatingCol3Bar = false;
-            activeBars.add(col3Bar);
-        }
-        if (col4.get(i).equals('3')) {
-            End end = endPool.obtain();
-            end.init(Gameplay.COL4_X, startHeight + i * incrementLength,64, incrementLength);
-            activeEnds.add(end);
-            isCreatingCol4Bar = false;
-            activeBars.add(col4Bar);
+            isCreatingBar = false;
+            activeBars.add(bar);
         }
     }
 

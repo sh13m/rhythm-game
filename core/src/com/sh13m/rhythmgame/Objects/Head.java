@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool;
 import com.sh13m.rhythmgame.Screens.Gameplay;
-import com.sh13m.rhythmgame.Tools.NoteLogic;
 import com.sh13m.rhythmgame.Tools.SongInput;
 
 public class Head implements Pool.Poolable {
@@ -44,6 +43,10 @@ public class Head implements Pool.Poolable {
         return head.y;
     }
 
+    public Rectangle getRect() {
+        return head;
+    }
+
     @Override
     public void reset() {
         head.set(0,0,0,0);
@@ -56,12 +59,12 @@ public class Head implements Pool.Poolable {
     }
 
     public void update(Rectangle receptor1, Rectangle receptor2,
-                       Rectangle receptor3, Rectangle receptor4) {
+                       Rectangle receptor3, Rectangle receptor4,
+                       Bar bar, End end) {
         if (!isHeld) head.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
         else if (isHeld) head.y = Gameplay.R_HEIGHT;
-        // remove notes if they fall off-screen
-        if (head.y + 64 < 0) {
-            alive = false;
+        // break combo they fall off-screen
+        if (head.y + 64 < 0 && !missed) {
             comboBreak = true;
             missed = true;
         }
@@ -71,28 +74,24 @@ public class Head implements Pool.Poolable {
             isHit = true;
             isHeld = true;
             head.y = Gameplay.R_HEIGHT;
-            NoteLogic.col1HoldEnd = false;
         }
         if (head.overlaps(receptor2) && SongInput.receptor2JustPressed()) {
             comboAdd = true;
             isHit = true;
             isHeld = true;
             head.y = Gameplay.R_HEIGHT;
-            NoteLogic.col2HoldEnd = false;
         }
         if (head.overlaps(receptor3) && SongInput.receptor3JustPressed()) {
             comboAdd = true;
             isHit = true;
             isHeld = true;
             head.y = Gameplay.R_HEIGHT;
-            NoteLogic.col3HoldEnd = false;
         }
         if (head.overlaps(receptor4) && SongInput.receptor4JustPressed()) {
             comboAdd = true;
             isHit = true;
             isHeld = true;
             head.y = Gameplay.R_HEIGHT;
-            NoteLogic.col4HoldEnd = false;
         }
         // note let go too early
         if (head.overlaps(receptor1) && isHeld && !SongInput.receptor1Pressed()) {
@@ -111,22 +110,9 @@ public class Head implements Pool.Poolable {
             comboBreak = true;
             isHeld = false;
         }
-        // note held all the way till end
-        if (head.x == Gameplay.COL1_X && NoteLogic.col1HoldEnd && isHeld) {
+
+        if (!end.alive) {
             alive = false;
-            NoteLogic.col1HoldEnd = false;
-        }
-        if (head.x == Gameplay.COL2_X && NoteLogic.col2HoldEnd && isHeld) {
-            alive = false;
-            NoteLogic.col2HoldEnd = false;
-        }
-        if (head.x == Gameplay.COL3_X && NoteLogic.col3HoldEnd && isHeld) {
-            alive = false;
-            NoteLogic.col3HoldEnd = false;
-        }
-        if (head.x == Gameplay.COL4_X && NoteLogic.col4HoldEnd && isHeld) {
-            alive = false;
-            NoteLogic.col4HoldEnd = false;
         }
     }
 }

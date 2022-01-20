@@ -12,11 +12,6 @@ public class NoteLogic {
     public int COMBO;
     public String JUDGEMENT;
 
-    public static boolean col1HoldEnd = false;
-    public static boolean col2HoldEnd = false;
-    public static boolean col3HoldEnd = false;
-    public static boolean col4HoldEnd = false;
-
     public NoteLogic() {
         COMBO = 0;
         JUDGEMENT = "NONE";
@@ -48,40 +43,43 @@ public class NoteLogic {
         }
     }
 
+    // indexes must be lined up in all 3 arrays
     private void updateHolds(SongReader sr,
                              Rectangle receptor1, Rectangle receptor2,
                              Rectangle receptor3, Rectangle receptor4) {
-
+        Head head;
         End end;
-        int eLen = sr.activeEnds.size;
-        for (int i=eLen; --i >= 0; ) {
+        Bar bar;
+        int len = sr.activeBars.size;
+        for (int i=len; --i >= 0; ) { // moves everything down
+            head = sr.activeHeads.get(i);
             end = sr.activeEnds.get(i);
-            end.update(receptor1, receptor2, receptor3, receptor4);
+            bar = sr.activeBars.get(i);
 
+            end.update(head, bar);
+            head.update(receptor1, receptor2, receptor3, receptor4, bar, end);
+            bar.update(head, end);
+
+
+            if (head.comboBreak) {
+                COMBO = 0;
+                JUDGEMENT = "MISS";
+            }
+            if (head.isHit) {
+                COMBO++;
+                getJudgement(head.getY());
+                head.isHit = false;
+            }
+            if (!head.alive) {
+                sr.activeHeads.removeIndex(i);
+                sr.headPool.free(head);
+            }
             if (!end.alive) {
                 sr.activeEnds.removeIndex(i);
                 sr.endPool.free(end);
             }
-        }
-        Head head;
-        int hLen = sr.activeHeads.size;
-        for (int j=hLen; --j >= 0; ) {
-            head = sr.activeHeads.get(j);
-            head.update(receptor1, receptor2, receptor3, receptor4);
-
-            if (!head.alive) {
-                sr.activeHeads.removeIndex(j);
-                sr.headPool.free(head);
-            }
-        }
-        Bar bar;
-        int bLen = sr.activeBars.size;
-        for (int k=bLen; --k >= 0; ) {
-            bar = sr.activeBars.get(k);
-            bar.update();
-
             if (!bar.alive) {
-                sr.activeBars.removeIndex(k);
+                sr.activeBars.removeIndex(i);
                 sr.barPool.free(bar);
             }
         }

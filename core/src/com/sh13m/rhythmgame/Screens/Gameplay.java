@@ -149,7 +149,7 @@ public class Gameplay implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
+        update();
 
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -169,7 +169,7 @@ public class Gameplay implements Screen {
         game.batch.end();
     }
 
-    private void update(float delta) {
+    private void update() {
         handleInput();
         nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
 
