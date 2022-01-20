@@ -63,9 +63,9 @@ public class Head implements Pool.Poolable {
 
     public void update(Rectangle receptor1, Rectangle receptor2,
                        Rectangle receptor3, Rectangle receptor4,
-                       Bar bar, End end) {
-        if (!isHeld) head.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
-        else if (isHeld) head.y = Gameplay.R_HEIGHT;
+                       End end) {
+        if (isHeld) head.y = Gameplay.R_HEIGHT;
+        else head.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
         // break combo they fall off-screen
         if (head.y + 64 < 0 && !missed) {
             comboBreak = true;

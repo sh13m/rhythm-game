@@ -44,7 +44,7 @@ public class Reset implements Screen {
         game.batch.begin();
         drawResetText();
         drawSelectionText();
-        game.ltext.draw(game.batch, "RESET SCORES", 5, 20);
+        game.smalltext.draw(game.batch, "RESET SCORES", 5, 20);
         game.batch.end();
     }
     private void update(float delta) {

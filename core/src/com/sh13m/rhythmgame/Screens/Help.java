@@ -40,7 +40,7 @@ public class Help implements Screen {
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         drawHelpText();
-        game.ltext.draw(game.batch, "HELP", 5, 20);
+        game.smalltext.draw(game.batch, "HELP", 5, 20);
         game.batch.end();
     }
 

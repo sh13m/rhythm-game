@@ -27,10 +27,10 @@ public class Gameplay implements Screen {
     public static final int SCROLL_SPEED = 900;
     private static final float GLOBAL_DELAY = 3;
     private static final float SCROLL_OFFSET = (480f - R_HEIGHT) / SCROLL_SPEED;
-    public static float COL1_X = RhythmGame.V_WIDTH / 2 - 128;
-    public static float COL2_X = RhythmGame.V_WIDTH / 2 - 64;
-    public static float COL3_X = RhythmGame.V_WIDTH / 2;
-    public static float COL4_X = RhythmGame.V_WIDTH / 2 + 64;
+    public static float COL1_X = RhythmGame.V_WIDTH / 2f - 128;
+    public static float COL2_X = RhythmGame.V_WIDTH / 2f - 64;
+    public static float COL3_X = RhythmGame.V_WIDTH / 2f;
+    public static float COL4_X = RhythmGame.V_WIDTH / 2f + 64;
 
     // render
     private final RhythmGame game;
@@ -70,12 +70,11 @@ public class Gameplay implements Screen {
     // song data
     private final Music music;
     private final SongReader sr;
-    private boolean START = false;
 
     // temp other
     private final Timer delayedMusicStart;
     private final Timer delayedNoteStart;
-    private NoteLogic nl;
+    private final NoteLogic nl;
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
@@ -157,15 +156,15 @@ public class Gameplay implements Screen {
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         game.batch.setColor(1,1,1,0.2f);
-        game.batch.draw(bg, RhythmGame.V_WIDTH/2 - (480*bg.getWidth()/bg.getHeight())/2,0,480*bg.getWidth()/bg.getHeight(),480);
+        game.batch.draw(bg, RhythmGame.V_WIDTH/2f - (480f*bg.getWidth()/bg.getHeight())/2f,0,480f*bg.getWidth()/bg.getHeight(),480);
         game.batch.setColor(1,1,1,1);
-        game.batch.draw(stage, RhythmGame.V_WIDTH / 2 - stage.getWidth() / 2, 0);
-        game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2 - receptors_img.getRegionWidth() / 2 , R_HEIGHT);
+        game.batch.draw(stage, RhythmGame.V_WIDTH / 2f - stage.getWidth() / 2f, 0);
+        game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2f - receptors_img.getRegionWidth() / 2f , R_HEIGHT);
         drawInput();
         drawNotes();
         drawJudgement();
-        game.font.draw(game.batch, String.valueOf(nl.COMBO), RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font, String.valueOf(nl.COMBO)) / 2, COMBO_HEIGHT);
-        game.ltext.draw(game.batch, "GAMEPLAY", 5, 20);
+        game.font.draw(game.batch, String.valueOf(nl.COMBO), RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, String.valueOf(nl.COMBO)) / 2, COMBO_HEIGHT);
+        game.smalltext.draw(game.batch, "GAMEPLAY", 5, 20);
         game.batch.end();
     }
 
@@ -221,12 +220,26 @@ public class Gameplay implements Screen {
     }
 
     private void drawJudgement() {
-        if (nl.JUDGEMENT.equals("MISS")) game.batch.draw(MISS, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
-        else if (nl.JUDGEMENT.equals("BAD")) game.batch.draw(BAD, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
-        else if (nl.JUDGEMENT.equals("GOOD")) game.batch.draw(GOOD, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
-        else if (nl.JUDGEMENT.equals("GREAT")) game.batch.draw(GREAT, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
-        else if (nl.JUDGEMENT.equals("PERFECT")) game.batch.draw(PERFECT, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
-        else if (nl.JUDGEMENT.equals("MAX")) game.batch.draw(MAX, RhythmGame.V_WIDTH/2 - Judgement.getWidth()/2*.7f, J_HEIGHT, MISS.getRegionWidth()*.7f, MISS.getRegionHeight()*.7f);
+        switch (nl.JUDGEMENT) {
+            case "MISS":
+                game.batch.draw(MISS, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                break;
+            case "BAD":
+                game.batch.draw(BAD, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                break;
+            case "GOOD":
+                game.batch.draw(GOOD, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                break;
+            case "GREAT":
+                game.batch.draw(GREAT, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                break;
+            case "PERFECT":
+                game.batch.draw(PERFECT, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                break;
+            case "MAX":
+                game.batch.draw(MAX, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                break;
+        }
     }
 
     @Override

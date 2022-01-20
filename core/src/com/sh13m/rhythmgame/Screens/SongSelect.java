@@ -45,7 +45,7 @@ public class SongSelect implements Screen {
 
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
-        game.ltext.draw(game.batch, "SONG SELECT", 5, 20);
+        game.smalltext.draw(game.batch, "SONG SELECT", 5, 20);
         game.font.draw(game.batch, String.valueOf(selection), 40, 300);
         game.batch.end();
     }

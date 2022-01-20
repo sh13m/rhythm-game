@@ -14,13 +14,13 @@ import com.sh13m.rhythmgame.Screens.Menu;
 public class RhythmGame extends Game {
 	private Graphics.DisplayMode displayMode;
 	private boolean isFullScreen;
-	public static final int V_WIDTH = 640;
-	public static final int V_HEIGHT = 480;
+	public static final Integer V_WIDTH = 640;
+	public static final Integer V_HEIGHT = 480;
 
 	public ShapeRenderer shapeRenderer;
 	public SpriteBatch batch;
 	public BitmapFont font;
-	public BitmapFont ltext;
+	public BitmapFont smalltext;
 
 	public Music menuTheme;
 	public Sound click;
@@ -38,8 +38,8 @@ public class RhythmGame extends Game {
 				Gdx.files.internal("Graphics/Bebas_Neue.fnt"),
 				Gdx.files.internal("Graphics/Bebas_Neue_0.png"),
 				false);
-		ltext = new BitmapFont();
-		ltext.getData().setScale(0.7f);
+		smalltext = new BitmapFont();
+		smalltext.getData().setScale(0.7f);
 		click = Gdx.audio.newSound(Gdx.files.internal("SFX/click.ogg"));
 		menuTheme = Gdx.audio.newMusic(Gdx.files.internal("SFX/Music title (loop).ogg"));
 		menuTheme.setVolume(0.2f);
@@ -77,7 +77,7 @@ public class RhythmGame extends Game {
 		batch.dispose();
 		shapeRenderer.dispose();
 		font.dispose();
-		ltext.dispose();
+		smalltext.dispose();
 		menuTheme.dispose();
 		click.dispose();
 	}

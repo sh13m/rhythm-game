@@ -12,7 +12,6 @@ import com.sh13m.rhythmgame.Screens.Gameplay;
 
 // not all features of the sm file are implemented in this game
 public class SongReader {
-    private final FileHandle songFile;
     private final String[] fileLines;
 
     public float offset;
@@ -64,7 +63,7 @@ public class SongReader {
     };
 
     public SongReader(int level) {
-        songFile = Gdx.files.internal("Songs/" + level + "/map.sm");
+        FileHandle songFile = Gdx.files.internal("Songs/" + level + "/map.sm");
         fileLines = songFile.readString().split("\\r?\\n");
         getOffset();
         getBPM();

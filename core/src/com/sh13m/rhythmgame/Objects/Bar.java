@@ -39,17 +39,13 @@ public class Bar implements Pool.Poolable {
         return bar.height;
     }
 
-    public Rectangle getRect() {
-        return bar;
-    }
-
     @Override
     public void reset() {
         bar.set(0,0,0,0);
         alive = false;
     }
 
-    public void update(Head head, End end) {
+    public void update(Head head) {
         if (bar.overlaps(head.getRect()) && head.isHeld) {
             bar.height -= (Gameplay.R_HEIGHT + 30 - bar.y);
             bar.y = Gameplay.R_HEIGHT + 30;

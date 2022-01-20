@@ -8,7 +8,6 @@ import com.sh13m.rhythmgame.Objects.TapNote;
 import com.sh13m.rhythmgame.Screens.Gameplay;
 
 public class NoteLogic {
-    private static float HOLD_CHECK_PERIOD = 0.15f;
     public int COMBO;
     public String JUDGEMENT;
 
@@ -56,9 +55,9 @@ public class NoteLogic {
             end = sr.activeEnds.get(i);
             bar = sr.activeBars.get(i);
 
-            end.update(head, bar);
-            head.update(receptor1, receptor2, receptor3, receptor4, bar, end);
-            bar.update(head, end);
+            end.update(head);
+            head.update(receptor1, receptor2, receptor3, receptor4, end);
+            bar.update(head);
 
 
             if (head.comboBreak) {

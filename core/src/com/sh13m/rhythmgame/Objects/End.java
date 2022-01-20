@@ -19,25 +19,13 @@ public class End implements Pool.Poolable {
         this.alive = true;
     }
 
-    public Rectangle getRect() {
-        return end;
-    }
-
-    public float getX() {
-        return end.x;
-    }
-
-    public float getY() {
-        return end.y;
-    }
-
     @Override
     public void reset() {
         end.set(0,0,0,0);
         alive = false;
     }
 
-    public void update(Head head, Bar bar) {
+    public void update(Head head) {
         end.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
         // hold successfully done
         if (end.overlaps(head.getRect()) && head.isHeld) {
