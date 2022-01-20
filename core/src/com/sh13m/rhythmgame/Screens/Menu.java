@@ -3,9 +3,7 @@ package com.sh13m.rhythmgame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sh13m.rhythmgame.RhythmGame;
@@ -16,6 +14,8 @@ public class Menu implements Screen {
     private final RhythmGame game;
     private final Viewport viewport;
     private final OrthographicCamera cam;
+    private final Pixmap pm;
+    private final Cursor cursor;
 
     // assets
     private final Texture logo;
@@ -36,6 +36,11 @@ public class Menu implements Screen {
         cam = new OrthographicCamera();
         cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
         viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+
+        // sets cursor invisible
+        pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        cursor = Gdx.graphics.newCursor(pm,0,0);
+        Gdx.graphics.setCursor(cursor);
 
         selection = 0;
     }
@@ -164,5 +169,7 @@ public class Menu implements Screen {
     @Override
     public void dispose() {
         logo.dispose();
+        pm.dispose();
+        cursor.dispose();
     }
 }

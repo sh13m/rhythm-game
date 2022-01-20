@@ -36,8 +36,7 @@ public class Gameplay implements Screen {
     private final RhythmGame game;
     private final Viewport viewport;
     private final OrthographicCamera cam;
-    private final Pixmap pm;
-    private final Cursor cursor;
+
 
     // textures
     private final Texture note_img;
@@ -78,10 +77,7 @@ public class Gameplay implements Screen {
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
-        // sets the cursor invisible
-        pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        cursor = Gdx.graphics.newCursor(pm,0,0);
-        Gdx.graphics.setCursor(cursor);
+
 
         // set up camera
         cam = new OrthographicCamera();
@@ -267,8 +263,6 @@ public class Gameplay implements Screen {
         note_img.dispose();
         hold_bar_img.dispose();
         bg.dispose();
-        pm.dispose();
-        cursor.dispose();
         music.dispose();
         stage.dispose();
         delayedMusicStart.clear();

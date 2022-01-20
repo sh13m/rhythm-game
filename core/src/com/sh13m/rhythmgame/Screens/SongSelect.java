@@ -3,7 +3,6 @@ package com.sh13m.rhythmgame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -19,8 +18,6 @@ public class SongSelect implements Screen {
 
     public SongSelect(RhythmGame game) {
         this.game = game;
-        // sets cursor back after exiting gameplay
-        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
 
         cam = new OrthographicCamera();
         cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
