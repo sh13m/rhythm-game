@@ -13,26 +13,20 @@ import com.sh13m.rhythmgame.Screens.Gameplay;
 // not all features of the sm file are implemented in this game
 public class SongReader {
     private final String[] fileLines;
-
     public float offset;
     private float bpm;
     private int noteType;
 
     public float timeSinceStart;
     public float measureTime;
-
     private boolean lastMeasure;
-
     public boolean isCreatingBar;
     private static Bar bar;
-
     private int currentLine;
-
     private final float measureLength;
     private float incrementLength;
 
     private final Array<Character> col1, col2, col3, col4;
-
     public final Array<TapNote> activeTapNotes = new Array<>();
     public final Pool<TapNote> tapNotePool = new Pool<TapNote>() {
         @Override
