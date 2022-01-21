@@ -109,13 +109,13 @@ public class Gameplay implements Screen {
         float musicBuffer = -1;
         if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
         else musicBuffer = 0;
-        game.delayedMusicStart.scheduleTask(new Timer.Task() {
+        this.game.delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 music.play();
             }
         }, GLOBAL_DELAY + musicBuffer + sr.offset);
-        game.delayedNoteStart.scheduleTask(new Timer.Task() {
+        this.game.delayedNoteStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 sr.parseMeasure();

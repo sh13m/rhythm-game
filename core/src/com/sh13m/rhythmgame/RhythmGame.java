@@ -31,8 +31,8 @@ public class RhythmGame extends Game {
 	public Music menuTheme;
 	public Sound click;
 
-	public final Timer delayedMusicStart = new Timer();
-	public final Timer delayedNoteStart = new Timer();
+	public Timer delayedMusicStart;
+	public Timer delayedNoteStart;
 
 	@Override
 	public void create() {
