@@ -66,10 +66,6 @@ public class Gameplay implements Screen {
     // song data
     private final Music music;
     private final SongReader sr;
-
-    // temp other
-    private final Timer delayedMusicStart;
-    private final Timer delayedNoteStart;
     private final NoteLogic nl;
 
     public Gameplay(RhythmGame game, int level) {
@@ -113,15 +109,13 @@ public class Gameplay implements Screen {
         float musicBuffer = -1;
         if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
         else musicBuffer = 0;
-        delayedMusicStart = new Timer();
-        delayedMusicStart.scheduleTask(new Timer.Task() {
+        game.delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 music.play();
             }
         }, GLOBAL_DELAY + musicBuffer + sr.offset);
-        delayedNoteStart = new Timer();
-        delayedNoteStart.scheduleTask(new Timer.Task() {
+        game.delayedNoteStart.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 sr.parseMeasure();
@@ -270,7 +264,7 @@ public class Gameplay implements Screen {
         bg.dispose();
         music.dispose();
         stage.dispose();
-        delayedMusicStart.clear();
-        delayedNoteStart.clear();
+        game.delayedMusicStart.clear();
+        game.delayedNoteStart.clear();
     }
 }

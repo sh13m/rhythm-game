@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sh13m.rhythmgame.Screens.Menu;
@@ -29,6 +30,9 @@ public class RhythmGame extends Game {
 
 	public Music menuTheme;
 	public Sound click;
+
+	public final Timer delayedMusicStart = new Timer();
+	public final Timer delayedNoteStart = new Timer();
 
 	@Override
 	public void create() {
