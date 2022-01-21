@@ -17,7 +17,7 @@ public class Scoring implements Screen {
     private int BAD_COUNT;
     private int MISS_COUNT;
 
-    public Scoring (RhythmGame game, int MAX_COMBO, int ACCURACY, long SCORE,
+    public Scoring (RhythmGame game, int MAX_COMBO, float ACCURACY, long SCORE,
                     int MAX_COUNT, int PERFECT_COUNT, int GREAT_COUNT,
                     int GOOD_COUNT, int BAD_COUNT, int MISS_COUNT) {
         this.game = game;

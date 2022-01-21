@@ -15,13 +15,12 @@ public class NoteLogic {
     public int HEALTH;
     public float ACCURACY;
     public long SCORE;
-    private int MAX_COUNT;
-    private int PERFECT_COUNT;
-    private int GREAT_COUNT;
-    private int GOOD_COUNT;
-    private int BAD_COUNT;
-    private int MISS_COUNT;
-    public boolean SONG_OVER;
+    public int MAX_COUNT;
+    public int PERFECT_COUNT;
+    public int GREAT_COUNT;
+    public int GOOD_COUNT;
+    public int BAD_COUNT;
+    public int MISS_COUNT;
 
     private final Array<Float> accuracyIndex;
 

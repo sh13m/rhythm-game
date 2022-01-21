@@ -20,6 +20,8 @@ import com.sh13m.rhythmgame.Tools.SongReader;
 import com.sh13m.rhythmgame.Tools.TextUtil;
 
 public class Gameplay implements Screen {
+    private final RhythmGame game;
+
     // gameplay settings
     public static final int R_HEIGHT = 30;
     private static final int COMBO_HEIGHT = 300;
@@ -31,8 +33,8 @@ public class Gameplay implements Screen {
     public static float COL2_X = RhythmGame.V_WIDTH / 2f - 64;
     public static float COL3_X = RhythmGame.V_WIDTH / 2f;
     public static float COL4_X = RhythmGame.V_WIDTH / 2f + 64;
-
-    private final RhythmGame game;
+    private boolean SONG_OVER;
+    private boolean GO_SCORE;
 
     // textures
     private final Texture note_img;
@@ -67,11 +69,17 @@ public class Gameplay implements Screen {
     private final Music music;
     private final SongReader sr;
     private final NoteLogic nl;
+
+    // timers
     private final Timer delayedMusicStart;
     private final Timer delayedNoteStart;
+    private final Timer songEnd;
+    private final Timer goScoring;
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
+        SONG_OVER = false;
+        GO_SCORE = false;
 
         // set up textures
         note_img = new Texture(Gdx.files.internal("Graphics/notes.png"));
@@ -111,6 +119,8 @@ public class Gameplay implements Screen {
         float musicBuffer = -1;
         if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
         else musicBuffer = 0;
+
+        // start timers
         delayedMusicStart = Timer.instance();
         delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
@@ -125,6 +135,20 @@ public class Gameplay implements Screen {
                 sr.parseMeasure();
             }
         }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET);
+        songEnd = Timer.instance();
+        songEnd.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                SONG_OVER = true;
+            }
+        }, sr.songTime);
+        goScoring = Timer.instance();
+        goScoring.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                GO_SCORE = true;
+            }
+        }, sr.songTime + 5);
     }
 
     @Override
@@ -158,13 +182,25 @@ public class Gameplay implements Screen {
     private void update() {
         handleInput();
         nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
-
+        if (GO_SCORE) {
+            game.setScreen(new Scoring(game, nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
+                    nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
+                    nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
+            dispose();
+        }
     }
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new SongSelect(game));
-            dispose();
+            if (SONG_OVER) {
+                game.setScreen(new Scoring(game, nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
+                        nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
+                        nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
+                dispose();
+            } else {
+                game.setScreen(new SongSelect(game));
+                dispose();
+            }
         }
 
     }
@@ -270,5 +306,7 @@ public class Gameplay implements Screen {
         stage.dispose();
         delayedMusicStart.clear();
         delayedNoteStart.clear();
+        songEnd.clear();
+        goScoring.clear();
     }
 }

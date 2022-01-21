@@ -19,6 +19,7 @@ public class SongReader {
 
     public float timeSinceStart;
     public float measureTime;
+    public float songTime;
     private boolean lastMeasure;
     public boolean isCreatingBar;
     private static Bar bar;
@@ -72,7 +73,7 @@ public class SongReader {
         measureTime = 1/(bpm / 60 / 4);
         measureLength = Gameplay.SCROLL_SPEED * measureTime;
         timeSinceStart = 0;
-
+        getSongTimeLength();
         noteType = 0;
     }
 
@@ -101,7 +102,6 @@ public class SongReader {
     public void parseMeasure() { // reads entire column by column
         float startHeight = 480;
         getNoteDataStart();
-
         while (!lastMeasure) {
             readMeasure();
             for (int i=0; i < noteType; ++i) {
@@ -234,5 +234,13 @@ public class SongReader {
             }
         }
         return name;
+    }
+
+    private void getSongTimeLength() {
+        getNoteDataStart();
+        for (int i = currentLine; i < fileLines.length; ++i) {
+            if (fileLines[i].contains(";")) songTime += measureTime;
+            if (fileLines[i].contains(",")) songTime += measureTime;
+        }
     }
 }
