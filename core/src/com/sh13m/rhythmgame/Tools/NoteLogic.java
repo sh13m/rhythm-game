@@ -86,14 +86,13 @@ public class NoteLogic {
                     JUDGEMENT = "BAD";
                     updateAccuracy(60);
                     HEALTH -= 2.5;
-                    if (HEALTH < 0) HEALTH = 0;
                 }
                 else {
                     JUDGEMENT = "MISS";
                     updateAccuracy(0);
                     HEALTH -= 5;
-                    if (HEALTH < 0) HEALTH = 0;
                 }
+                if (HEALTH < 0) HEALTH = 0;
                 head.comboBreak = false;
             }
             if (head.isHit) {
