@@ -62,7 +62,9 @@ public class NoteLogic {
 
             if (head.comboBreak) {
                 COMBO = 0;
-                JUDGEMENT = "MISS";
+                if (head.gotJudgement) JUDGEMENT = "BAD";
+                else JUDGEMENT = "MISS";
+                head.comboBreak = false;
             }
             if (head.isHit) {
                 COMBO++;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 import com.sh13m.rhythmgame.Objects.Bar;
+import com.sh13m.rhythmgame.Objects.End;
 import com.sh13m.rhythmgame.Objects.Head;
 import com.sh13m.rhythmgame.Objects.TapNote;
 import com.sh13m.rhythmgame.RhythmGame;
@@ -36,6 +37,7 @@ public class Gameplay implements Screen {
     // textures
     private final Texture note_img;
     private final Texture hold_bar_img;
+    private final Texture end_img;
     private final TextureRegion receptors_img;
     private final TextureRegion note_1;
     private final TextureRegion note_2;
@@ -76,6 +78,7 @@ public class Gameplay implements Screen {
         // set up textures
         note_img = new Texture(Gdx.files.internal("Graphics/notes.png"));
         hold_bar_img = new Texture(Gdx.files.internal("Graphics/hold.png"));
+        end_img = new Texture(Gdx.files.internal("Graphics/end.png"));
         receptors_img = new TextureRegion(note_img,0,64,256,64);
         note_1 = new TextureRegion(note_img, 0,0,64,64);
         note_2 = new TextureRegion(note_img, 64,0,64,64);
@@ -194,6 +197,10 @@ public class Gameplay implements Screen {
         // bars
         for (Bar bar : sr.activeBars) {
             game.batch.draw(hold_bar_img, bar.getX(), bar.getY(), bar.getWidth(), bar.getHeight());
+        }
+        // ends
+        for (End end : sr.activeEnds) {
+            game.batch.draw(end_img, end.getX(), end.getY());
         }
         // hold heads
         for (Head head : sr.activeHeads) {

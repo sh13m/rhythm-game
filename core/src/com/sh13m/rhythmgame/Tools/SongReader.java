@@ -183,9 +183,10 @@ public class SongReader {
     private void createHoldEnds(int i, float startHeight, Array<Character> col, float COL_X) {
         if (col.get(i).equals('3')) {
             End end = endPool.obtain();
-            end.init(COL_X, startHeight + 16 + i * incrementLength,64, incrementLength);
+            end.init(COL_X, startHeight - 32 + i * incrementLength,64, 64);
             activeEnds.add(end);
             isCreatingBar = false;
+            bar.setHeight(bar.getHeight() - 32);
             activeBars.add(bar);
         }
     }

@@ -19,6 +19,14 @@ public class End implements Pool.Poolable {
         this.alive = true;
     }
 
+    public float getX() {
+        return end.x;
+    }
+
+    public float getY() {
+        return end.y;
+    }
+
     @Override
     public void reset() {
         end.set(0,0,0,0);
@@ -28,7 +36,7 @@ public class End implements Pool.Poolable {
     public void update(Head head) {
         end.y -= Gameplay.SCROLL_SPEED * Gdx.graphics.getDeltaTime();
         // hold successfully done
-        if (end.overlaps(head.getRect()) && head.isHeld) {
+        if (end.y <= head.getY() + 32 && head.isHeld) {
             alive = false;
         }
         // hold missed
