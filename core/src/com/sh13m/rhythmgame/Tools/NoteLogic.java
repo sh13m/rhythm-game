@@ -19,6 +19,7 @@ public class NoteLogic {
 
     public NoteLogic() {
         COMBO = 0;
+        MAX_COMBO = 0;
         JUDGEMENT = "NONE";
         HEALTH = 100;
         ACCURACY = 100;

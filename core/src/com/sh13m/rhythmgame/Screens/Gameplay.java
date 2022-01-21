@@ -234,6 +234,12 @@ public class Gameplay implements Screen {
         }
     }
 
+    private void drawStats() {
+        game.smalltext.draw(game.batch, String.valueOf(nl.SCORE), 500, 400);
+        game.smalltext.draw(game.batch, String.format(".3f", nl.ACCURACY), 500, 380);
+        game.smalltext.draw(game.batch, String.valueOf(nl.MAX_COMBO), 500, 360);
+    }
+
     @Override
     public void resize(int width, int height) {
         game.viewport.update(width, height);
@@ -258,6 +264,7 @@ public class Gameplay implements Screen {
     public void dispose() {
         note_img.dispose();
         hold_bar_img.dispose();
+        end_img.dispose();
         bg.dispose();
         music.dispose();
         stage.dispose();
