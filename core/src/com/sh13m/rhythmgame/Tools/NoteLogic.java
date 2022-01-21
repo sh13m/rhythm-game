@@ -15,6 +15,14 @@ public class NoteLogic {
     public int HEALTH;
     public float ACCURACY;
     public long SCORE;
+    private int MAX_COUNT;
+    private int PERFECT_COUNT;
+    private int GREAT_COUNT;
+    private int GOOD_COUNT;
+    private int BAD_COUNT;
+    private int MISS_COUNT;
+    public boolean SONG_OVER;
+
     private final Array<Float> accuracyIndex;
 
     public NoteLogic() {
@@ -25,6 +33,13 @@ public class NoteLogic {
         ACCURACY = 100;
         SCORE = 0;
         accuracyIndex = new Array<>();
+
+        MAX_COUNT = 0;
+        PERFECT_COUNT = 0;
+        GREAT_COUNT = 0;
+        GOOD_COUNT = 0;
+        BAD_COUNT = 0;
+        MISS_COUNT = 0;
     }
 
     public void updateNotes(SongReader sr,
@@ -45,6 +60,7 @@ public class NoteLogic {
             if (note.isHit) getJudgement(note.getY());
             if (note.missed) {
                 JUDGEMENT = "MISS";
+                MISS_COUNT++;
                 updateAccuracy(0);
             }
             if (note.comboAdd) {
@@ -85,11 +101,13 @@ public class NoteLogic {
                 COMBO = 0;
                 if (head.gotJudgement) {
                     JUDGEMENT = "BAD";
+                    BAD_COUNT++;
                     updateAccuracy(60);
                     HEALTH -= 2.5;
                 }
                 else {
                     JUDGEMENT = "MISS";
+                    MISS_COUNT++;
                     updateAccuracy(0);
                     HEALTH -= 5;
                 }
@@ -120,6 +138,7 @@ public class NoteLogic {
     private void getJudgement(float y) {
         if (y < (float)Gameplay.R_HEIGHT - 54) {
             JUDGEMENT = "BAD";
+            BAD_COUNT++;
             updateAccuracy(60);
             SCORE += 600;
             HEALTH += 1;
@@ -127,6 +146,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT - 42) {
             JUDGEMENT = "GOOD";
+            GOOD_COUNT++;
             updateAccuracy(70);
             SCORE += 700;
             HEALTH += 2;
@@ -134,6 +154,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT - 28) {
             JUDGEMENT = "GREAT";
+            GREAT_COUNT++;
             updateAccuracy(80);
             SCORE += 800;
             HEALTH += 3;
@@ -141,6 +162,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT - 14) {
             JUDGEMENT = "PERFECT";
+            PERFECT_COUNT++;
             updateAccuracy(100);
             SCORE += 900;
             HEALTH += 5;
@@ -148,6 +170,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT + 14) {
             JUDGEMENT = "MAX";
+            MAX_COUNT++;
             updateAccuracy(100);
             SCORE += 1000;
             HEALTH += 5;
@@ -155,6 +178,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT + 28) {
             JUDGEMENT = "PERFECT";
+            PERFECT_COUNT++;
             updateAccuracy(100);
             SCORE += 900;
             HEALTH += 5;
@@ -162,6 +186,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT + 42) {
             JUDGEMENT = "GREAT";
+            GREAT_COUNT++;
             updateAccuracy(80);
             SCORE += 800;
             HEALTH += 3;
@@ -169,6 +194,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT + 54) {
             JUDGEMENT = "GOOD";
+            GOOD_COUNT++;
             updateAccuracy(70);
             SCORE += 700;
             HEALTH += 2;
@@ -176,6 +202,7 @@ public class NoteLogic {
         }
         else if (y < (float)Gameplay.R_HEIGHT + 64) {
             JUDGEMENT = "BAD";
+            BAD_COUNT++;
             updateAccuracy(60);
             SCORE += 600;
             HEALTH += 1;
