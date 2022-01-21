@@ -153,6 +153,7 @@ public class Gameplay implements Screen {
         drawJudgement();
         game.font.draw(game.batch, String.valueOf(nl.COMBO), RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, String.valueOf(nl.COMBO)) / 2, COMBO_HEIGHT);
         game.smalltext.draw(game.batch, "GAMEPLAY", 5, 20);
+        drawStats();
         game.batch.end();
     }
 
@@ -236,8 +237,9 @@ public class Gameplay implements Screen {
 
     private void drawStats() {
         game.smalltext.draw(game.batch, String.valueOf(nl.SCORE), 500, 400);
-        game.smalltext.draw(game.batch, String.format(".3f", nl.ACCURACY), 500, 380);
+        game.smalltext.draw(game.batch, String.format("%.1f", nl.ACCURACY), 500, 380);
         game.smalltext.draw(game.batch, String.valueOf(nl.MAX_COMBO), 500, 360);
+        game.smalltext.draw(game.batch, String.valueOf(nl.HEALTH), 500, 340);
     }
 
     @Override
