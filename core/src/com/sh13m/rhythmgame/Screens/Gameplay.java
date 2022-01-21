@@ -67,8 +67,8 @@ public class Gameplay implements Screen {
     private final Music music;
     private final SongReader sr;
     private final NoteLogic nl;
-    private Timer delayedMusicStart;
-    private Timer delayedNoteStart;
+    private final Timer delayedMusicStart;
+    private final Timer delayedNoteStart;
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
