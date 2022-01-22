@@ -1,6 +1,7 @@
 package com.sh13m.rhythmgame.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
 import com.sh13m.rhythmgame.RhythmGame;
@@ -50,7 +51,14 @@ public class Scoring implements Screen {
     }
 
     private void update() {
+        handleInput();
+    }
 
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new SongSelect(game));
+            dispose();
+        }
     }
 
     @Override

@@ -58,6 +58,7 @@ public class Gameplay implements Screen {
     private final TextureRegion GREAT;
     private final TextureRegion PERFECT;
     private final TextureRegion MAX;
+    private final Texture HEALTH_BAR;
 
     // rectangles
     private final Rectangle receptor1;
@@ -102,7 +103,7 @@ public class Gameplay implements Screen {
         GREAT = new TextureRegion(Judgement,0,68,256,34);
         PERFECT = new TextureRegion(Judgement,0,34,256,34);
         MAX = new TextureRegion(Judgement,0,0,256,34);
-
+        HEALTH_BAR = new Texture(Gdx.files.internal("Graphics/health_bar.png"));
 
         // set up rectangles
         receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
@@ -153,7 +154,7 @@ public class Gameplay implements Screen {
 
     @Override
     public void show() {
-        game.font.getData().setScale(0.5f);
+
     }
 
     @Override
@@ -165,17 +166,14 @@ public class Gameplay implements Screen {
 
         game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
-        game.batch.setColor(1,1,1,0.2f);
-        game.batch.draw(bg, RhythmGame.V_WIDTH/2f - (480f*bg.getWidth()/bg.getHeight())/2f,0,480f*bg.getWidth()/bg.getHeight(),480);
-        game.batch.setColor(1,1,1,1);
-        game.batch.draw(stage, RhythmGame.V_WIDTH / 2f - stage.getWidth() / 2f, 0);
-        game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2f - receptors_img.getRegionWidth() / 2f , R_HEIGHT);
+        drawBackground();
+        drawPlayField();
         drawInput();
         drawNotes();
+        drawCombo();
         drawJudgement();
-        game.font.draw(game.batch, String.valueOf(nl.COMBO), RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, String.valueOf(nl.COMBO)) / 2, COMBO_HEIGHT);
-        game.smalltext.draw(game.batch, "GAMEPLAY", 5, 20);
         drawStats();
+        game.smalltext.draw(game.batch, "GAMEPLAY", 5, 20);
         game.batch.end();
     }
 
@@ -202,7 +200,6 @@ public class Gameplay implements Screen {
                 dispose();
             }
         }
-
     }
 
     private void drawInput() {
@@ -246,6 +243,17 @@ public class Gameplay implements Screen {
         }
     }
 
+    private void drawBackground() {
+        game.batch.setColor(1,1,1,0.2f);
+        game.batch.draw(bg, RhythmGame.V_WIDTH/2f - (480f*bg.getWidth()/bg.getHeight())/2f,0,480f*bg.getWidth()/bg.getHeight(),480);
+        game.batch.setColor(1,1,1,1);
+    }
+
+    private void drawPlayField() {
+        game.batch.draw(stage, RhythmGame.V_WIDTH / 2f - stage.getWidth() / 2f, 0);
+        game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2f - receptors_img.getRegionWidth() / 2f , R_HEIGHT);
+    }
+
     private void drawJudgement() {
         switch (nl.JUDGEMENT) {
             case "MISS":
@@ -269,11 +277,16 @@ public class Gameplay implements Screen {
         }
     }
 
+    private void drawCombo() {
+        game.font.getData().setScale(0.5f);
+        game.font.draw(game.batch, String.valueOf(nl.COMBO), RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, String.valueOf(nl.COMBO)) / 2, COMBO_HEIGHT);
+    }
+
     private void drawStats() {
-        game.smalltext.draw(game.batch, String.valueOf(nl.SCORE), 500, 400);
-        game.smalltext.draw(game.batch, String.format("%.1f", nl.ACCURACY), 500, 380);
-        game.smalltext.draw(game.batch, String.valueOf(nl.MAX_COMBO), 500, 360);
-        game.smalltext.draw(game.batch, String.valueOf(nl.HEALTH), 500, 340);
+        game.font.getData().setScale(0.4f);
+        game.font.draw(game.batch, String.valueOf(nl.SCORE), 10, 470);
+        game.font.draw(game.batch, String.format("%.1f%c", nl.ACCURACY, '%'), 10, 450);
+        game.batch.draw(HEALTH_BAR, RhythmGame.V_WIDTH / 2f + 145, 35, 8, nl.HEALTH*2);
     }
 
     @Override
@@ -308,5 +321,6 @@ public class Gameplay implements Screen {
         delayedNoteStart.clear();
         songEnd.clear();
         goScoring.clear();
+        HEALTH_BAR.dispose();
     }
 }
