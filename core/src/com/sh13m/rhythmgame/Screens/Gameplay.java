@@ -50,6 +50,8 @@ public class Gameplay implements Screen {
     private final TextureRegion note_clicked_3;
     private final TextureRegion note_clicked_4;
     private final Texture stage;
+    private final Texture stage_left;
+    private final Texture stage_right;
     private final Texture bg;
     private final Texture Judgement;
     private final TextureRegion MISS;
@@ -58,7 +60,7 @@ public class Gameplay implements Screen {
     private final TextureRegion GREAT;
     private final TextureRegion PERFECT;
     private final TextureRegion MAX;
-    private final Texture HEALTH_BAR;
+    private final Texture health_bar_img;
 
     // rectangles
     private final Rectangle receptor1;
@@ -96,6 +98,8 @@ public class Gameplay implements Screen {
         note_clicked_3 = new TextureRegion(note_img, 128,128,64,64);
         note_clicked_4 = new TextureRegion(note_img,192,128,64,64);
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
+        stage_left = new Texture(Gdx.files.internal("Graphics/stage_left.png"));
+        stage_right = new Texture(Gdx.files.internal("Graphics/stage_right.png"));
         Judgement = new Texture(Gdx.files.internal("Graphics/Modern Nore 1x6.png"));
         MISS = new TextureRegion(Judgement,0,170,256,34);
         BAD = new TextureRegion(Judgement,0,136,256,34);
@@ -103,7 +107,7 @@ public class Gameplay implements Screen {
         GREAT = new TextureRegion(Judgement,0,68,256,34);
         PERFECT = new TextureRegion(Judgement,0,34,256,34);
         MAX = new TextureRegion(Judgement,0,0,256,34);
-        HEALTH_BAR = new Texture(Gdx.files.internal("Graphics/health_bar.png"));
+        health_bar_img = new Texture(Gdx.files.internal("Graphics/health_bar.png"));
 
         // set up rectangles
         receptor1 = new Rectangle(COL1_X, R_HEIGHT,64,64);
@@ -251,6 +255,8 @@ public class Gameplay implements Screen {
 
     private void drawPlayField() {
         game.batch.draw(stage, RhythmGame.V_WIDTH / 2f - stage.getWidth() / 2f, 0);
+        game.batch.draw(stage_left, RhythmGame.V_WIDTH / 2f - 149, 0);
+        game.batch.draw(stage_right, RhythmGame.V_WIDTH/ 2f + 136, 0);
         game.batch.draw(receptors_img, RhythmGame.V_WIDTH / 2f - receptors_img.getRegionWidth() / 2f , R_HEIGHT);
     }
 
@@ -286,7 +292,7 @@ public class Gameplay implements Screen {
         game.font.getData().setScale(0.4f);
         game.font.draw(game.batch, String.valueOf(nl.SCORE), 10, 470);
         game.font.draw(game.batch, String.format("%.1f%c", nl.ACCURACY, '%'), 10, 450);
-        game.batch.draw(HEALTH_BAR, RhythmGame.V_WIDTH / 2f + 145, 35, 8, nl.HEALTH*2);
+        game.batch.draw(health_bar_img, RhythmGame.V_WIDTH / 2f + 145, 7, 8, nl.HEALTH*2.2f);
     }
 
     @Override
@@ -317,10 +323,12 @@ public class Gameplay implements Screen {
         bg.dispose();
         music.dispose();
         stage.dispose();
+        stage_left.dispose();
+        stage_right.dispose();
         delayedMusicStart.clear();
         delayedNoteStart.clear();
         songEnd.clear();
         goScoring.clear();
-        HEALTH_BAR.dispose();
+        health_bar_img.dispose();
     }
 }
