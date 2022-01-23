@@ -187,7 +187,7 @@ public class Gameplay implements Screen {
         handleInput();
         nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
         if (GO_SCORE) {
-            game.setScreen(new Scoring(game, level,
+            game.setScreen(new Scoring(game, level, false,
                     nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                     nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                     nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
@@ -198,7 +198,7 @@ public class Gameplay implements Screen {
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (SONG_OVER) {
-                game.setScreen(new Scoring(game, level,
+                game.setScreen(new Scoring(game, level, false,
                         nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                         nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                         nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));

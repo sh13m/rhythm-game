@@ -13,6 +13,7 @@ import com.sh13m.rhythmgame.RhythmGame;
 public class Scoring implements Screen {
     private RhythmGame game;
 
+    // stats
     private int MAX_COMBO;
     public float ACCURACY;
     public long SCORE;
@@ -22,6 +23,8 @@ public class Scoring implements Screen {
     private int GOOD_COUNT;
     private int BAD_COUNT;
     private int MISS_COUNT;
+    private boolean failed;
+    private final Texture rank;
 
     // textures
     private final Texture bg;
@@ -38,7 +41,7 @@ public class Scoring implements Screen {
     private Array<Long> scores;
     private long currentHighScore;
 
-    public Scoring (RhythmGame game, int level,
+    public Scoring (RhythmGame game, int level, boolean failed,
                     int MAX_COMBO, float ACCURACY, long SCORE,
                     int MAX_COUNT, int PERFECT_COUNT, int GREAT_COUNT,
                     int GOOD_COUNT, int BAD_COUNT, int MISS_COUNT) {
@@ -54,6 +57,8 @@ public class Scoring implements Screen {
         this.GOOD_COUNT = GOOD_COUNT;
         this.BAD_COUNT = BAD_COUNT;
         this.MISS_COUNT = MISS_COUNT;
+        this.failed = failed;
+        rank = getRank();
 
         // set up textures
         bg = new Texture(Gdx.files.internal("Songs/" + level + "/bg.jpg"));
@@ -119,6 +124,7 @@ public class Scoring implements Screen {
 
     private void drawScoring() {
         game.batch.draw(scoreBox, 30, 30, 250, 420);
+        game.batch.draw(rank, 350, RhythmGame.V_HEIGHT/2f - rank.getHeight()/2);
 
         game.smalltext.getData().setScale(0.6f);
         game.smalltext.draw(game.batch, "SCORE", 50, 425);
@@ -146,6 +152,26 @@ public class Scoring implements Screen {
 
         game.smalltext.getData().setScale(0.7f);
         game.smalltext.draw(game.batch, "PRESS <ESC> TO GO BACK TO SONG MENU", 5, 15);
+    }
+
+    private Texture getRank() {
+        Texture rank;
+        if (failed) {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_F.png"));
+        } else if (ACCURACY >= 100) {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_S+.png"));
+        } else if (ACCURACY >= 95) {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_S.png"));
+        } else if (ACCURACY >= 90) {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_A.png"));
+        } else if (ACCURACY >= 80) {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_B.png"));
+        } else if (ACCURACY >= 70) {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_C.png"));
+        } else {
+            rank = new Texture(Gdx.files.internal("Graphics/rank_D.png"));
+        }
+        return rank;
     }
 
     @Override
