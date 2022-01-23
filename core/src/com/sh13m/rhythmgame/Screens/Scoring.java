@@ -11,19 +11,19 @@ import com.badlogic.gdx.utils.Array;
 import com.sh13m.rhythmgame.RhythmGame;
 
 public class Scoring implements Screen {
-    private RhythmGame game;
+    private final RhythmGame game;
 
     // stats
-    private int MAX_COMBO;
+    private final int MAX_COMBO;
     public float ACCURACY;
     public long SCORE;
-    private int MAX_COUNT;
-    private int PERFECT_COUNT;
-    private int GREAT_COUNT;
-    private int GOOD_COUNT;
-    private int BAD_COUNT;
-    private int MISS_COUNT;
-    private boolean failed;
+    private final int MAX_COUNT;
+    private final int PERFECT_COUNT;
+    private final int GREAT_COUNT;
+    private final int GOOD_COUNT;
+    private final int BAD_COUNT;
+    private final int MISS_COUNT;
+    private final boolean failed;
     private final Texture rank;
 
     // textures
@@ -36,10 +36,6 @@ public class Scoring implements Screen {
     private final TextureRegion PERFECT;
     private final TextureRegion MAX;
     private final Texture scoreBox;
-
-    private FileHandle scorefile = Gdx.files.local("scores.txt");
-    private Array<Long> scores;
-    private long currentHighScore;
 
     public Scoring (RhythmGame game, int level, boolean failed,
                     int MAX_COMBO, float ACCURACY, long SCORE,
@@ -71,16 +67,17 @@ public class Scoring implements Screen {
         MAX = new TextureRegion(judgement,0,0,256,34);
         scoreBox = new Texture(Gdx.files.internal("Graphics/stage.png"));
 
-        // read scores
-        scores = new Array<>();
+        // read scores and save highscores
+        Array<Long> scores = new Array<>();
+        FileHandle scorefile = Gdx.files.local("scores.txt");
         String[] temp = scorefile.readString().split("\\r?\\n");
         for (String s : temp) {
             scores.add(Long.parseLong(s));
         }
-        currentHighScore = scores.get(level-1); // get and save high score
+        long currentHighScore = scores.get(level - 1);
         if (SCORE > currentHighScore) scores.set(level-1, SCORE);
         scorefile.write(false);
-        for (int i=0; i < scores.size; ++i) {
+        for (int i = 0; i < scores.size; ++i) {
             scorefile.writeString(String.valueOf(scores.get(i)), true);
             if (i != scores.size-1) scorefile.writeString("\n", true);
         }
@@ -124,7 +121,7 @@ public class Scoring implements Screen {
 
     private void drawScoring() {
         game.batch.draw(scoreBox, 30, 30, 250, 420);
-        game.batch.draw(rank, 350, RhythmGame.V_HEIGHT/2f - rank.getHeight()/2);
+        game.batch.draw(rank, 350, RhythmGame.V_HEIGHT/2f - rank.getHeight()/2f);
 
         game.smalltext.getData().setScale(0.6f);
         game.smalltext.draw(game.batch, "SCORE", 50, 425);
