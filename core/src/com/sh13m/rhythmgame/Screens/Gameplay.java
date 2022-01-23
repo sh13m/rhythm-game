@@ -72,6 +72,7 @@ public class Gameplay implements Screen {
     private final Music music;
     private final SongReader sr;
     private final NoteLogic nl;
+    private final int level;
 
     // timers
     private final Timer delayedMusicStart;
@@ -116,6 +117,7 @@ public class Gameplay implements Screen {
         receptor4 = new Rectangle(COL4_X, R_HEIGHT,64,64);
 
         // set up song data
+        this.level = level;
         nl = new NoteLogic();
         sr = new SongReader(level);
         music = Gdx.audio.newMusic(Gdx.files.internal("Songs/" + level + "/" + sr.getSongFileName()));
@@ -185,7 +187,8 @@ public class Gameplay implements Screen {
         handleInput();
         nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
         if (GO_SCORE) {
-            game.setScreen(new Scoring(game, nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
+            game.setScreen(new Scoring(game, level,
+                    nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                     nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                     nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
             dispose();
@@ -195,7 +198,8 @@ public class Gameplay implements Screen {
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (SONG_OVER) {
-                game.setScreen(new Scoring(game, nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
+                game.setScreen(new Scoring(game, level,
+                        nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                         nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                         nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
                 dispose();
@@ -247,10 +251,10 @@ public class Gameplay implements Screen {
         }
     }
 
-    private void drawBackground() {
-        game.batch.setColor(1,1,1,0.2f);
+    private void drawBackground() {game.batch.setColor(1,1,1,0.2f);
         game.batch.draw(bg, RhythmGame.V_WIDTH/2f - (480f*bg.getWidth()/bg.getHeight())/2f,0,480f*bg.getWidth()/bg.getHeight(),480);
         game.batch.setColor(1,1,1,1);
+
     }
 
     private void drawPlayField() {
