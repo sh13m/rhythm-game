@@ -53,7 +53,7 @@ public class Gameplay implements Screen {
     private final Texture stage_left;
     private final Texture stage_right;
     private final Texture bg;
-    private final Texture Judgement;
+    private final Texture judgement;
     private final TextureRegion MISS;
     private final TextureRegion BAD;
     private final TextureRegion GOOD;
@@ -100,13 +100,13 @@ public class Gameplay implements Screen {
         stage = new Texture(Gdx.files.internal("Graphics/stage.png"));
         stage_left = new Texture(Gdx.files.internal("Graphics/stage_left.png"));
         stage_right = new Texture(Gdx.files.internal("Graphics/stage_right.png"));
-        Judgement = new Texture(Gdx.files.internal("Graphics/Modern Nore 1x6.png"));
-        MISS = new TextureRegion(Judgement,0,170,256,34);
-        BAD = new TextureRegion(Judgement,0,136,256,34);
-        GOOD = new TextureRegion(Judgement,0,102,256,34);
-        GREAT = new TextureRegion(Judgement,0,68,256,34);
-        PERFECT = new TextureRegion(Judgement,0,34,256,34);
-        MAX = new TextureRegion(Judgement,0,0,256,34);
+        judgement = new Texture(Gdx.files.internal("Graphics/Modern Nore 1x6.png"));
+        MISS = new TextureRegion(judgement,0,170,256,34);
+        BAD = new TextureRegion(judgement,0,136,256,34);
+        GOOD = new TextureRegion(judgement,0,102,256,34);
+        GREAT = new TextureRegion(judgement,0,68,256,34);
+        PERFECT = new TextureRegion(judgement,0,34,256,34);
+        MAX = new TextureRegion(judgement,0,0,256,34);
         health_bar_img = new Texture(Gdx.files.internal("Graphics/health_bar.png"));
 
         // set up rectangles
@@ -263,22 +263,22 @@ public class Gameplay implements Screen {
     private void drawJudgement() {
         switch (nl.JUDGEMENT) {
             case "MISS":
-                game.batch.draw(MISS, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                game.batch.draw(MISS, RhythmGame.V_WIDTH / 2f - judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
                 break;
             case "BAD":
-                game.batch.draw(BAD, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                game.batch.draw(BAD, RhythmGame.V_WIDTH / 2f - judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
                 break;
             case "GOOD":
-                game.batch.draw(GOOD, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                game.batch.draw(GOOD, RhythmGame.V_WIDTH / 2f - judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
                 break;
             case "GREAT":
-                game.batch.draw(GREAT, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                game.batch.draw(GREAT, RhythmGame.V_WIDTH / 2f - judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
                 break;
             case "PERFECT":
-                game.batch.draw(PERFECT, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                game.batch.draw(PERFECT, RhythmGame.V_WIDTH / 2f - judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
                 break;
             case "MAX":
-                game.batch.draw(MAX, RhythmGame.V_WIDTH / 2f - Judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
+                game.batch.draw(MAX, RhythmGame.V_WIDTH / 2f - judgement.getWidth() / 2f * .7f, J_HEIGHT, MISS.getRegionWidth() * .7f, MISS.getRegionHeight() * .7f);
                 break;
         }
     }
@@ -330,5 +330,6 @@ public class Gameplay implements Screen {
         songEnd.clear();
         goScoring.clear();
         health_bar_img.dispose();
+        judgement.dispose();
     }
 }
