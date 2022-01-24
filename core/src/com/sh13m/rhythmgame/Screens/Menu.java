@@ -48,7 +48,7 @@ public class Menu implements Screen {
     public void render(float delta) {
         update(delta);
 
-        Gdx.gl.glClearColor(0.1f,0.1f,0.1f,1);
+        Gdx.gl.glClearColor(0.05f,0.05f,0.05f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
         game.batch.setProjectionMatrix(game.cam.combined);
