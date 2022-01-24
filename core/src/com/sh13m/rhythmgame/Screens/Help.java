@@ -21,7 +21,7 @@ public class Help implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
+        update();
 
         Gdx.gl.glClearColor(0.05f,0.05f,0.05f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -33,7 +33,7 @@ public class Help implements Screen {
         game.batch.end();
     }
 
-    private void update(float delta) {
+    private void update() {
         handleInput();
     }
 
@@ -62,7 +62,7 @@ public class Help implements Screen {
         game.font.draw(game.batch, "and so on.", 30, 140);
         game.font.getData().setScale(0.7f);
         game.font.setColor(0,1,1,1);
-        game.font.draw(game.batch, "BACK", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font, "BACK") / 2, 75);
+        game.font.draw(game.batch, "BACK", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, "BACK") / 2, 75);
     }
 
     @Override

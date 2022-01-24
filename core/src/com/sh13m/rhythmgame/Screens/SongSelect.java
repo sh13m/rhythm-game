@@ -26,7 +26,7 @@ public class SongSelect implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
+        update();
 
         Gdx.gl.glClearColor(0.05f,0.05f,0.05f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -38,7 +38,7 @@ public class SongSelect implements Screen {
         game.batch.end();
     }
 
-    private void update(float delta) {
+    private void update() {
         handleInput();
     }
 

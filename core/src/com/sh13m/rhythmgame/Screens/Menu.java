@@ -54,8 +54,8 @@ public class Menu implements Screen {
         game.batch.setProjectionMatrix(game.cam.combined);
 
         game.batch.begin();
-        game.batch.draw(logo, RhythmGame.V_WIDTH / 2 - logo.getWidth() / 2, 300);
-        game.smalltext.draw(game.batch, "*USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT*", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.smalltext,"*USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT*" ) / 2, 20);
+        game.batch.draw(logo, RhythmGame.V_WIDTH / 2f - logo.getWidth() / 2f, 300);
+        game.smalltext.draw(game.batch, "*USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT*", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.smalltext,"*USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT*" ) / 2, 20);
         drawSelectionsText();
         game.batch.end();
     }
@@ -91,31 +91,31 @@ public class Menu implements Screen {
         // highlights text if currently selected
         if (selection == 0) {
             game.font.setColor(0,1,1,1);
-            game.font.draw(game.batch, "PLAY", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"PLAY") / 2, 280);
+            game.font.draw(game.batch, "PLAY", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"PLAY") / 2, 280);
         } else {
             game.font.setColor(1,1,1,1);
-            game.font.draw(game.batch, "PLAY", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"PLAY") / 2, 280);
+            game.font.draw(game.batch, "PLAY", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"PLAY") / 2, 280);
         }
         if (selection == 1) {
             game.font.setColor(0,1,1,1);
-            game.font.draw(game.batch, "HELP", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"HELP") / 2, 240);
+            game.font.draw(game.batch, "HELP", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"HELP") / 2, 240);
         } else {
             game.font.setColor(1,1,1,1);
-            game.font.draw(game.batch, "HELP", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"HELP") / 2, 240);
+            game.font.draw(game.batch, "HELP", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"HELP") / 2, 240);
         }
         if (selection == 2) {
             game.font.setColor(0,1,1,1);
-            game.font.draw(game.batch, "RESET", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"RESET") / 2, 200);
+            game.font.draw(game.batch, "RESET", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"RESET") / 2, 200);
         } else {
             game.font.setColor(1,1,1,1);
-            game.font.draw(game.batch, "RESET", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"RESET") / 2, 200);
+            game.font.draw(game.batch, "RESET", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"RESET") / 2, 200);
         }
         if (selection == 3) {
             game.font.setColor(0,1,1,1);
-            game.font.draw(game.batch, "QUIT", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"QUIT") / 2, 160);
+            game.font.draw(game.batch, "QUIT", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"QUIT") / 2, 160);
         } else {
             game.font.setColor(1,1,1,1);
-            game.font.draw(game.batch, "QUIT", RhythmGame.V_WIDTH / 2 - TextUtil.getTextWidth(game.font,"QUIT") / 2, 160);
+            game.font.draw(game.batch, "QUIT", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font,"QUIT") / 2, 160);
         }
     }
 
