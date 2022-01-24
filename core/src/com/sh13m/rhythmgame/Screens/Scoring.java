@@ -155,7 +155,7 @@ public class Scoring implements Screen {
         Texture rank;
         if (failed) {
             rank = new Texture(Gdx.files.internal("Graphics/rank_F.png"));
-        } else if (MISS_COUNT == 0) {
+        } else if (ACCURACY >= 100f) {
             rank = new Texture(Gdx.files.internal("Graphics/rank_S+.png"));
         } else if (ACCURACY >= 95f) {
             rank = new Texture(Gdx.files.internal("Graphics/rank_S.png"));
