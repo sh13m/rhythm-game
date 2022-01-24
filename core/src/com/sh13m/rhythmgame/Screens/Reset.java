@@ -67,7 +67,7 @@ public class Reset implements Screen {
     private void drawResetText() {
         game.font.getData().setScale(0.7f);
         game.font.setColor(1,1,1,1);
-        game.font.draw(game.batch, "all game data will be cleared", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, "All game data will be cleared") / 2, 380);
+        game.font.draw(game.batch, "all scores will be cleared", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, "All scores will be cleared") / 2, 380);
         game.font.draw(game.batch, "do you wish to proceed?", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, "do you wish to proceed?") / 2, 330);
     }
 
