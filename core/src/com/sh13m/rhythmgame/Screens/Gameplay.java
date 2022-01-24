@@ -148,14 +148,14 @@ public class Gameplay implements Screen {
             public void run() {
                 SONG_OVER = true;
             }
-        }, sr.songTime);
+        },GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET + sr.songTime);
         goScoring = Timer.instance();
         goScoring.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 GO_SCORE = true;
             }
-        }, sr.songTime + 5);
+        }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET + sr.songTime + 3);
     }
 
     @Override
