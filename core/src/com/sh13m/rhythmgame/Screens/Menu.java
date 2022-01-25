@@ -55,7 +55,7 @@ public class Menu implements Screen {
 
         game.batch.begin();
         game.batch.draw(logo, RhythmGame.V_WIDTH / 2f - logo.getWidth() / 2f, 300);
-        game.smalltext.draw(game.batch, "*USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT*", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.smalltext,"*USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT*" ) / 2, 20);
+        game.smalltext.draw(game.batch, "USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.smalltext,"USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT" ) / 2, 20);
         drawSelectionsText();
         game.batch.end();
     }
