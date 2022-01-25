@@ -68,7 +68,7 @@ public class NoteLogic {
             }
             if (note.comboBreak) {
                 COMBO = 0;
-                HEALTH -= 10;
+                HEALTH -= 15;
                 if (HEALTH < 0) HEALTH = 0;
             }
             if (!note.alive) {
@@ -102,13 +102,13 @@ public class NoteLogic {
                     JUDGEMENT = "BAD";
                     BAD_COUNT++;
                     updateAccuracy(60);
-                    HEALTH -= 5;
+                    HEALTH -= 10;
                 }
                 else {
                     JUDGEMENT = "MISS";
                     MISS_COUNT++;
                     updateAccuracy(0);
-                    HEALTH -= 10;
+                    HEALTH -= 15;
                 }
                 if (HEALTH < 0) HEALTH = 0;
                 head.comboBreak = false;
