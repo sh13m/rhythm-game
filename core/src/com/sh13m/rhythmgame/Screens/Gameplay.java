@@ -33,6 +33,7 @@ public class Gameplay implements Screen {
     public static float COL2_X = RhythmGame.V_WIDTH / 2f - 64;
     public static float COL3_X = RhythmGame.V_WIDTH / 2f;
     public static float COL4_X = RhythmGame.V_WIDTH / 2f + 64;
+    private boolean NO_FAIL;
     private boolean SONG_OVER;
     private boolean GO_SCORE;
 
@@ -79,11 +80,13 @@ public class Gameplay implements Screen {
     private final Timer delayedNoteStart;
     private final Timer songEnd;
     private final Timer goScoring;
+    private float transition;
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
         SONG_OVER = false;
         GO_SCORE = false;
+        NO_FAIL = false;
 
         // set up textures
         note_img = new Texture(Gdx.files.internal("Graphics/notes.png"));
@@ -127,7 +130,7 @@ public class Gameplay implements Screen {
         if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
         else musicBuffer = 0;
 
-        // start timers
+        // start r setup timers
         delayedMusicStart = Timer.instance();
         delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
@@ -155,7 +158,8 @@ public class Gameplay implements Screen {
             public void run() {
                 GO_SCORE = true;
             }
-        }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET + sr.songTime + 3);
+        }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET + sr.songTime + 5);
+        transition = 0;
     }
 
     @Override
@@ -165,7 +169,7 @@ public class Gameplay implements Screen {
 
     @Override
     public void render(float delta) {
-        update();
+        update(delta);
 
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -182,11 +186,22 @@ public class Gameplay implements Screen {
         game.batch.end();
     }
 
-    private void update() {
+    private void update(float delta) {
         handleInput();
-        nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
+        if (nl.HEALTH > 0 || NO_FAIL) nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
+        if (nl.HEALTH <= 0 && !NO_FAIL) {
+            transition += delta;
+            if (music.isPlaying()) music.stop();
+            if (transition >= 3) {
+                game.setScreen(new Scoring(game, level, true, NO_FAIL,
+                        nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
+                        nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
+                        nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
+                dispose();;
+            }
+        }
         if (GO_SCORE) {
-            game.setScreen(new Scoring(game, level, false,
+            game.setScreen(new Scoring(game, level, false, NO_FAIL,
                     nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                     nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                     nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
@@ -197,7 +212,7 @@ public class Gameplay implements Screen {
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (SONG_OVER) {
-                game.setScreen(new Scoring(game, level, false,
+                game.setScreen(new Scoring(game, level, false, NO_FAIL,
                         nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                         nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                         nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
@@ -206,6 +221,9 @@ public class Gameplay implements Screen {
                 game.setScreen(new SongSelect(game, level));
                 dispose();
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            NO_FAIL = true;
         }
     }
 
@@ -295,6 +313,7 @@ public class Gameplay implements Screen {
         game.font.getData().setScale(0.4f);
         game.font.draw(game.batch, String.valueOf(nl.SCORE), 10, 470);
         game.font.draw(game.batch, String.format("%.1f%c", nl.ACCURACY, '%'), 10, 450);
+        if (NO_FAIL) game.font.draw(game.batch, "NO-FAIL ON", 10, 430);
         game.batch.draw(health_bar_img, RhythmGame.V_WIDTH / 2f + 145, 7, 8, nl.HEALTH*2.2f);
     }
 

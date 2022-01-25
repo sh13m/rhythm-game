@@ -38,7 +38,7 @@ public class Scoring implements Screen {
     private final TextureRegion MAX;
     private final Texture scoreBox;
 
-    public Scoring (RhythmGame game, int level, boolean failed,
+    public Scoring (RhythmGame game, int level, boolean failed, boolean NO_FAIL,
                     int MAX_COMBO, float ACCURACY, long SCORE,
                     int MAX_COUNT, int PERFECT_COUNT, int GREAT_COUNT,
                     int GOOD_COUNT, int BAD_COUNT, int MISS_COUNT) {
@@ -69,19 +69,21 @@ public class Scoring implements Screen {
         MAX = new TextureRegion(judgement,0,0,256,34);
         scoreBox = new Texture(Gdx.files.internal("Graphics/stage.png"));
 
-        // read scores and save highscores
-        Array<Long> scores = new Array<>();
-        FileHandle scorefile = Gdx.files.local("scores.txt");
-        String[] temp = scorefile.readString().split("\\r?\\n");
-        for (String s : temp) {
-            scores.add(Long.parseLong(s));
-        }
-        long currentHighScore = scores.get(level - 1);
-        if (SCORE > currentHighScore) scores.set(level-1, SCORE);
-        scorefile.write(false);
-        for (int i = 0; i < scores.size; ++i) {
-            scorefile.writeString(String.valueOf(scores.get(i)), true);
-            if (i != scores.size-1) scorefile.writeString("\n", true);
+        // read scores and save highscores if didn't fail and NO_FAIL off
+        if (!NO_FAIL && !failed) {
+            Array<Long> scores = new Array<>();
+            FileHandle scorefile = Gdx.files.local("scores.txt");
+            String[] temp = scorefile.readString().split("\\r?\\n");
+            for (String s : temp) {
+                scores.add(Long.parseLong(s));
+            }
+            long currentHighScore = scores.get(level - 1);
+            if (SCORE > currentHighScore) scores.set(level-1, SCORE);
+            scorefile.write(false);
+            for (int i = 0; i < scores.size; ++i) {
+                scorefile.writeString(String.valueOf(scores.get(i)), true);
+                if (i != scores.size-1) scorefile.writeString("\n", true);
+            }
         }
     }
 
