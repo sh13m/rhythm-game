@@ -54,15 +54,18 @@ public class SongSelect implements Screen {
     private void handleInput() {
         if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             selection++;
+            game.click.play(.3f);
             if (selection > 10) selection = 1;
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             selection--;
+            game.click.play(.3f);
             if (selection < 1) selection = 10;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.click.play(.3f);
             game.setScreen(new Menu(game));
             dispose();
         }

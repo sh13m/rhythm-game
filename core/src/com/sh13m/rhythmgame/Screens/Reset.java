@@ -43,6 +43,7 @@ public class Reset implements Screen {
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.click.play(.3f);
             game.setScreen(new Menu(game));
             dispose();
         }
