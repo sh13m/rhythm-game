@@ -268,7 +268,8 @@ public class Gameplay implements Screen {
         }
     }
 
-    private void drawBackground() {game.batch.setColor(1,1,1,0.2f);
+    private void drawBackground() {
+        game.batch.setColor(1,1,1,0.2f);
         game.batch.draw(bg, RhythmGame.V_WIDTH/2f - (480f*bg.getWidth()/bg.getHeight())/2f,0,480f*bg.getWidth()/bg.getHeight(),480);
         game.batch.setColor(1,1,1,1);
 
