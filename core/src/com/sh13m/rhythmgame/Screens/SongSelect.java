@@ -43,7 +43,7 @@ public class SongSelect implements Screen {
         game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
         drawSongs();
-        game.smalltext.draw(game.batch, "<UP/DOWN> to change songs", RhythmGame.V_WIDTH/2f - TextUtil.getTextWidth(game.font, "<UP/DOWN> to change songs")/2f, 20);
+        game.smalltext.draw(game.batch, "<UP/DOWN> TO CHANGE SONGS", RhythmGame.V_WIDTH/2f - TextUtil.getTextWidth(game.smalltext, "<UP/DOWN> TO CHANGE SONGS")/2f, 20);
         game.batch.end();
     }
 
