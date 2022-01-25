@@ -34,9 +34,7 @@ public class RhythmGame extends Game {
 	public void create() {
 		displayMode = Gdx.graphics.getDisplayMode();
 		V_WIDTH = 480*displayMode.width/displayMode.height;
-		Gdx.graphics.setUndecorated(true);
-		Gdx.graphics.setWindowedMode(displayMode.width, displayMode.height);
-		isFullScreen = true;
+		isFullScreen = false;
 
 		batch = new SpriteBatch();
 		cam = new OrthographicCamera();
