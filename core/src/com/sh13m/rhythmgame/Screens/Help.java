@@ -29,7 +29,6 @@ public class Help implements Screen {
         game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
         drawHelpText();
-        game.smalltext.draw(game.batch, "HELP", 5, 20);
         game.batch.end();
     }
 
@@ -57,12 +56,13 @@ public class Help implements Screen {
         game.font.draw(game.batch, "is a health bar that will decrease when notes aren't successfully", 30, 290);
         game.font.draw(game.batch, "hit. Hitting notes successfully will replenish the health bar.", 30, 260);
         game.font.draw(game.batch, "Notes can be hit either by using the <Arrow> or the <DFJK>", 30,230);
-        game.font.draw(game.batch, "keys keys on your keyboard. The <D> key would control the", 30,200);
+        game.font.draw(game.batch, "keys on your keyboard. The <D> key would control the", 30,200);
         game.font.draw(game.batch, "leftmost receptor, <F> key the second leftmost receptor,", 30, 170);
-        game.font.draw(game.batch, "and so on.", 30, 140);
+        game.font.draw(game.batch, "and so on. If you are having a hard time passing levels, press", 30, 140);
+        game.font.draw(game.batch, "<F1> in-game to enable no-fail mode (scores wont be saved).", 30, 110);
         game.font.getData().setScale(0.7f);
         game.font.setColor(0,1,1,1);
-        game.font.draw(game.batch, "BACK", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, "BACK") / 2, 75);
+        game.font.draw(game.batch, "BACK", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.font, "BACK") / 2, 55);
     }
 
     @Override
