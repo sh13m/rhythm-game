@@ -204,7 +204,7 @@ public class Gameplay implements Screen {
                         nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
                 dispose();
             } else {
-                game.setScreen(new SongSelect(game));
+                game.setScreen(new SongSelect(game, level));
                 dispose();
             }
         }

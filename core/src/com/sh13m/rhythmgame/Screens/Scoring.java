@@ -25,6 +25,7 @@ public class Scoring implements Screen {
     private final int MISS_COUNT;
     private final boolean failed;
     private final Texture rank;
+    private int level;
 
     // textures
     private final Texture bg;
@@ -55,6 +56,7 @@ public class Scoring implements Screen {
         this.MISS_COUNT = MISS_COUNT;
         this.failed = failed;
         rank = getRank();
+        this.level = level;
 
         // set up textures
         bg = new Texture(Gdx.files.internal("Songs/" + level + "/bg.jpg"));
@@ -108,7 +110,7 @@ public class Scoring implements Screen {
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new SongSelect(game));
+            game.setScreen(new SongSelect(game, level));
             dispose();
         }
     }

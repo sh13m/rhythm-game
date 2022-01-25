@@ -122,7 +122,7 @@ public class Menu implements Screen {
     private void handleSelection() {
         switch (selection) {
             case 0:
-                game.setScreen(new SongSelect(game));
+                game.setScreen(new SongSelect(game, 1));
                 dispose();
                 break;
             case 1:
