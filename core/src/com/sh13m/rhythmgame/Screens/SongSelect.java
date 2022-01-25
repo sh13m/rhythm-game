@@ -11,6 +11,14 @@ import com.sh13m.rhythmgame.Tools.TextUtil;
 public class SongSelect implements Screen {
     private final RhythmGame game;
 
+    // fade transition
+    private boolean FADE_IN;
+    private boolean FADE_OUT;
+    private float FADE_ALPHA;
+    private boolean selected;
+    private boolean goback;
+    private float timeSinceClick;
+
     private int selection;
     private final String[] scores;
     private final String[] names;
@@ -18,6 +26,14 @@ public class SongSelect implements Screen {
     public SongSelect(RhythmGame game, int level) {
         this.game = game;
         if (!this.game.menuTheme.isPlaying()) this.game.menuTheme.play();
+
+        // fade transition setup
+        FADE_IN = true;
+        FADE_OUT = false;
+        FADE_ALPHA = 1;
+        timeSinceClick = 0;
+        selected = false;
+        goback = false;
 
 
         FileHandle scorefile = Gdx.files.internal("scores.txt");
@@ -35,7 +51,7 @@ public class SongSelect implements Screen {
 
     @Override
     public void render(float delta) {
-        update();
+        update(delta);
 
         Gdx.gl.glClearColor(0.05f,0.05f,0.05f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -44,11 +60,43 @@ public class SongSelect implements Screen {
         game.batch.begin();
         drawSongs();
         game.smalltext.draw(game.batch, "<UP/DOWN> TO CHANGE SONGS", RhythmGame.V_WIDTH/2f - TextUtil.getTextWidth(game.smalltext, "<UP/DOWN> TO CHANGE SONGS")/2f, 20);
+        fade(delta);
         game.batch.end();
     }
 
-    private void update() {
+    private void update(float delta) {
         handleInput();
+        if (selected) {
+            timeSinceClick += delta;
+            if (timeSinceClick >= .5f) {
+                if (goback) {
+                    game.setScreen(new Menu(game));
+                    dispose();
+                } else {
+                    game.setScreen(new Gameplay(game, selection));
+                    game.menuTheme.stop();
+                    dispose();
+                }
+            }
+        }
+    }
+
+    private void fade(float delta) {
+        if (FADE_OUT) {
+            FADE_ALPHA += delta*10;
+            if (FADE_ALPHA >= 1) {
+                FADE_ALPHA = 1;
+            }
+        } else if (FADE_IN) {
+            FADE_ALPHA -= delta*2;
+            if (FADE_ALPHA <= 0) {
+                FADE_ALPHA = 0;
+                FADE_IN = false;
+            }
+        }
+        game.batch.setColor(1,1,1, FADE_ALPHA);
+        game.batch.draw(game.fade, 0, 0, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+        game.batch.setColor(1,1,1,1);
     }
 
     private void handleInput() {
@@ -64,16 +112,17 @@ public class SongSelect implements Screen {
             if (selection < 1) selection = 10;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !selected) {
             game.click.play(.3f);
-            game.setScreen(new Menu(game));
-            dispose();
+            FADE_OUT = true;
+            selected = true;
+            goback = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            game.setScreen(new Gameplay(game, selection));
-            game.menuTheme.stop();
-            dispose();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !selected) {
+            game.click.play(.3f);
+            FADE_OUT = true;
+            selected = true;
         }
     }
 

@@ -10,8 +10,22 @@ import com.sh13m.rhythmgame.Tools.TextUtil;
 public class Help implements Screen {
     private final RhythmGame game;
 
+    // fade transition
+    private boolean FADE_IN;
+    private boolean FADE_OUT;
+    private float FADE_ALPHA;
+    private boolean selected;
+    private float timeSinceClick;
+
     public Help(RhythmGame game) {
         this.game = game;
+
+        // fade transition setup
+        FADE_IN = true;
+        FADE_OUT = false;
+        FADE_ALPHA = 1;
+        timeSinceClick = 0;
+        selected = false;
     }
 
     @Override
@@ -21,7 +35,7 @@ public class Help implements Screen {
 
     @Override
     public void render(float delta) {
-        update();
+        update(delta);
 
         Gdx.gl.glClearColor(0.05f,0.05f,0.05f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -29,18 +43,44 @@ public class Help implements Screen {
         game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
         drawHelpText();
+        fade(delta);
         game.batch.end();
     }
 
-    private void update() {
+    private void update(float delta) {
         handleInput();
+        if (selected) {
+            timeSinceClick += delta;
+            if (timeSinceClick >= .5f) {
+                game.setScreen(new Menu(game));
+                dispose();
+            }
+        }
+    }
+
+    private void fade(float delta) {
+        if (FADE_OUT) {
+            FADE_ALPHA += delta*10;
+            if (FADE_ALPHA >= 1) {
+                FADE_ALPHA = 1;
+            }
+        } else if (FADE_IN) {
+            FADE_ALPHA -= delta*2;
+            if (FADE_ALPHA <= 0) {
+                FADE_ALPHA = 0;
+                FADE_IN = false;
+            }
+        }
+        game.batch.setColor(1,1,1, FADE_ALPHA);
+        game.batch.draw(game.fade, 0, 0, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+        game.batch.setColor(1,1,1,1);
     }
 
     private void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !selected) {
             game.click.play(0.3f);
-            game.setScreen(new Menu(game));
-            dispose();
+            FADE_OUT = true;
+            selected = true;
         }
     }
 

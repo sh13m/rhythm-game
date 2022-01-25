@@ -16,20 +16,30 @@ public class Menu implements Screen {
     private final Pixmap pm;
     private final Cursor cursor;
 
+    // fade transition
+    private boolean FADE_IN;
+    private boolean FADE_OUT;
+    private float FADE_ALPHA;
+    private boolean selected;
+    private float timeSinceClick;
+
     // assets
     private final Texture logo;
-    private float timeSinceClick;
-    private boolean selected;
 
     private int selection;
 
     public Menu(RhythmGame game) {
         this.game = game;
 
-        // set up assets
-        logo = new Texture("Graphics/logo.png");
+        // fade transition setup
+        FADE_IN = true;
+        FADE_OUT = false;
+        FADE_ALPHA = 1;
         timeSinceClick = 0;
         selected = false;
+
+        // set up assets
+        logo = new Texture("Graphics/logo.png");
 
         // sets cursor invisible
         pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
@@ -53,11 +63,10 @@ public class Menu implements Screen {
 
         game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
-        game.batch.setColor(game.fade.getColor());
-        game.fade.draw(game.batch);
         game.batch.draw(logo, RhythmGame.V_WIDTH / 2f - logo.getWidth() / 2f, 300);
         game.smalltext.draw(game.batch, "USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.smalltext,"USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT" ) / 2, 20);
         drawSelectionsText();
+        fade(delta);
         game.batch.end();
     }
 
@@ -84,8 +93,27 @@ public class Menu implements Screen {
         // runs selection
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !selected) {
             game.click.play(0.3f);
+            FADE_OUT = true;
             selected = true;
         }
+    }
+
+    private void fade(float delta) {
+        if (FADE_OUT) {
+            FADE_ALPHA += delta*10;
+            if (FADE_ALPHA >= 1) {
+                FADE_ALPHA = 1;
+            }
+        } else if (FADE_IN) {
+            FADE_ALPHA -= delta*2;
+            if (FADE_ALPHA <= 0) {
+                FADE_ALPHA = 0;
+                FADE_IN = false;
+            }
+        }
+        game.batch.setColor(1,1,1, FADE_ALPHA);
+        game.batch.draw(game.fade, 0, 0, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+        game.batch.setColor(1,1,1,1);
     }
 
     private void drawSelectionsText() {

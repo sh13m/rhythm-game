@@ -13,6 +13,13 @@ import com.sh13m.rhythmgame.RhythmGame;
 public class Scoring implements Screen {
     private final RhythmGame game;
 
+    // fade transition
+    private boolean FADE_IN;
+    private boolean FADE_OUT;
+    private float FADE_ALPHA;
+    private boolean selected;
+    private float timeSinceClick;
+
     // stats
     private final int MAX_COMBO;
     public float ACCURACY;
@@ -25,7 +32,7 @@ public class Scoring implements Screen {
     private final int MISS_COUNT;
     private final boolean failed;
     private final Texture rank;
-    private int level;
+    private final int level;
 
     // textures
     private final Texture bg;
@@ -43,6 +50,13 @@ public class Scoring implements Screen {
                     int MAX_COUNT, int PERFECT_COUNT, int GREAT_COUNT,
                     int GOOD_COUNT, int BAD_COUNT, int MISS_COUNT) {
         this.game = game;
+
+        // fade transition setup
+        FADE_IN = true;
+        FADE_OUT = false;
+        FADE_ALPHA = 1;
+        timeSinceClick = 0;
+        selected = false;
 
         // get stats
         this.MAX_COMBO = MAX_COMBO;
@@ -94,7 +108,7 @@ public class Scoring implements Screen {
 
     @Override
     public void render(float delta) {
-        update();
+        update(delta);
 
         Gdx.gl.glClearColor(0.07f,0.07f,0.07f,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -103,17 +117,44 @@ public class Scoring implements Screen {
         game.batch.begin();
         drawBackground();
         drawScoring();
+        fade(delta);
         game.batch.end();
     }
 
-    private void update() {
+    private void update(float delta) {
         handleInput();
+        if (selected) {
+            timeSinceClick += delta;
+            if (timeSinceClick >= .5f) {
+                game.setScreen(new SongSelect(game, level));
+                dispose();
+            }
+        }
+    }
+
+    private void fade(float delta) {
+        if (FADE_OUT) {
+            FADE_ALPHA += delta*10;
+            if (FADE_ALPHA >= 1) {
+                FADE_ALPHA = 1;
+            }
+        } else if (FADE_IN) {
+            FADE_ALPHA -= delta*2;
+            if (FADE_ALPHA <= 0) {
+                FADE_ALPHA = 0;
+                FADE_IN = false;
+            }
+        }
+        game.batch.setColor(1,1,1, FADE_ALPHA);
+        game.batch.draw(game.fade, 0, 0, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+        game.batch.setColor(1,1,1,1);
     }
 
     private void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new SongSelect(game, level));
-            dispose();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !selected) {
+            game.click.play(.3f);
+            FADE_OUT = true;
+            selected = true;
         }
     }
 

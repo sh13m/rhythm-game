@@ -22,6 +22,12 @@ import com.sh13m.rhythmgame.Tools.TextUtil;
 public class Gameplay implements Screen {
     private final RhythmGame game;
 
+    // fade transition
+    private boolean FADE_IN;
+    private boolean FADE_OUT;
+    private float FADE_ALPHA;
+    private float transitionTime;
+
     // gameplay settings
     public static final int R_HEIGHT = 30;
     private static final int COMBO_HEIGHT = 300;
@@ -80,13 +86,19 @@ public class Gameplay implements Screen {
     private final Timer delayedNoteStart;
     private final Timer songEnd;
     private final Timer goScoring;
-    private float transition;
 
     public Gameplay(RhythmGame game, int level) {
         this.game = game;
+
         SONG_OVER = false;
         GO_SCORE = false;
         NO_FAIL = false;
+
+        // fade transition setup
+        FADE_IN = true;
+        FADE_OUT = false;
+        FADE_ALPHA = 1;
+        transitionTime = 0;
 
         // set up textures
         note_img = new Texture(Gdx.files.internal("Graphics/notes.png"));
@@ -130,7 +142,7 @@ public class Gameplay implements Screen {
         if (sr.offset < musicBuffer) musicBuffer = sr.offset*-1;
         else musicBuffer = 0;
 
-        // start r setup timers
+        // setup timers
         delayedMusicStart = Timer.instance();
         delayedMusicStart.scheduleTask(new Timer.Task() {
             @Override
@@ -159,7 +171,6 @@ public class Gameplay implements Screen {
                 GO_SCORE = true;
             }
         }, GLOBAL_DELAY + musicBuffer - SCROLL_OFFSET + sr.songTime + 5);
-        transition = 0;
     }
 
     @Override
@@ -183,6 +194,7 @@ public class Gameplay implements Screen {
         drawCombo();
         drawJudgement();
         drawStats();
+        fade(delta);
         game.batch.end();
     }
 
@@ -190,23 +202,48 @@ public class Gameplay implements Screen {
         handleInput();
         if (nl.HEALTH > 0 || NO_FAIL) nl.updateNotes(sr, receptor1, receptor2, receptor3, receptor4);
         if (nl.HEALTH <= 0 && !NO_FAIL) {
-            transition += delta;
+            transitionTime += delta;
             if (music.isPlaying()) music.stop();
-            if (transition >= 3) {
+            if (transitionTime >= 1.5f) {
+                FADE_OUT = true;
+            }
+            if (transitionTime >= 2) {
                 game.setScreen(new Scoring(game, level, true, NO_FAIL,
                         nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
                         nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
                         nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
-                dispose();;
+                dispose();
             }
         }
         if (GO_SCORE) {
-            game.setScreen(new Scoring(game, level, false, NO_FAIL,
-                    nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
-                    nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
-                    nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
-            dispose();
+            FADE_OUT = true;
+            transitionTime += delta;
+            if (transitionTime >= .5f) {
+                game.setScreen(new Scoring(game, level, false, NO_FAIL,
+                        nl.MAX_COMBO, nl.ACCURACY, nl.SCORE,
+                        nl.MAX_COUNT, nl.PERFECT_COUNT, nl.GREAT_COUNT,
+                        nl.GOOD_COUNT, nl.BAD_COUNT, nl.MISS_COUNT));
+                dispose();
+            }
         }
+    }
+
+    private void fade(float delta) {
+        if (FADE_OUT) {
+            FADE_ALPHA += delta*10;
+            if (FADE_ALPHA >= 1) {
+                FADE_ALPHA = 1;
+            }
+        } else if (FADE_IN) {
+            FADE_ALPHA -= delta*2;
+            if (FADE_ALPHA <= 0) {
+                FADE_ALPHA = 0;
+                FADE_IN = false;
+            }
+        }
+        game.batch.setColor(1,1,1, FADE_ALPHA);
+        game.batch.draw(game.fade, 0, 0, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+        game.batch.setColor(1,1,1,1);
     }
 
     private void handleInput() {
