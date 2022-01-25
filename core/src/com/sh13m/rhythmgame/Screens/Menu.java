@@ -52,8 +52,9 @@ public class Menu implements Screen {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
         game.batch.setProjectionMatrix(game.cam.combined);
-
         game.batch.begin();
+        game.batch.setColor(game.fade.getColor());
+        game.fade.draw(game.batch);
         game.batch.draw(logo, RhythmGame.V_WIDTH / 2f - logo.getWidth() / 2f, 300);
         game.smalltext.draw(game.batch, "USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT", RhythmGame.V_WIDTH / 2f - TextUtil.getTextWidth(game.smalltext,"USE <UP/DOWN> ARROW KEYS TO NAVIGATE AND <ENTER> TO SELECT" ) / 2, 20);
         drawSelectionsText();

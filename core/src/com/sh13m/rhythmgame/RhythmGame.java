@@ -7,7 +7,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -22,8 +24,11 @@ public class RhythmGame extends Game {
 	public SpriteBatch batch;
 	public Viewport viewport;
 	public OrthographicCamera cam;
+
 	public BitmapFont font;
 	public BitmapFont smalltext;
+	private Texture fadeTexture;
+	public Sprite fade;
 	public Music menuTheme;
 	public Sound click;
 
@@ -46,6 +51,9 @@ public class RhythmGame extends Game {
 				false);
 		smalltext = new BitmapFont();
 		smalltext.getData().setScale(0.7f);
+		fadeTexture = new Texture(Gdx.files.internal("Graphics/BLACK.png"));
+		fade = new Sprite(fadeTexture);
+		fade.setSize(V_WIDTH, V_HEIGHT);
 		click = Gdx.audio.newSound(Gdx.files.internal("SFX/click.ogg"));
 		menuTheme = Gdx.audio.newMusic(Gdx.files.internal("SFX/Music title (loop).ogg"));
 		menuTheme.setVolume(0.2f);
@@ -85,5 +93,6 @@ public class RhythmGame extends Game {
 		smalltext.dispose();
 		menuTheme.dispose();
 		click.dispose();
+		fadeTexture.dispose();
 	}
 }
