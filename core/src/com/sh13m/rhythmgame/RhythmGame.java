@@ -9,7 +9,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sh13m.rhythmgame.Screens.Menu;
@@ -20,7 +19,6 @@ public class RhythmGame extends Game {
 	public static Integer V_WIDTH;
 	public static final Integer V_HEIGHT = 480;
 
-	public ShapeRenderer shapeRenderer;
 	public SpriteBatch batch;
 	public Viewport viewport;
 	public OrthographicCamera cam;
@@ -41,8 +39,6 @@ public class RhythmGame extends Game {
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 		viewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
-		shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setAutoShapeType(true);
 
 		font = new BitmapFont(
 				Gdx.files.internal("Graphics/Bebas_Neue.fnt"),
@@ -85,7 +81,6 @@ public class RhythmGame extends Game {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		shapeRenderer.dispose();
 		font.dispose();
 		smalltext.dispose();
 		menuTheme.dispose();

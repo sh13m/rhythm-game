@@ -179,7 +179,6 @@ public class Gameplay implements Screen {
         drawCombo();
         drawJudgement();
         drawStats();
-        game.smalltext.draw(game.batch, "GAMEPLAY", 5, 20);
         game.batch.end();
     }
 
