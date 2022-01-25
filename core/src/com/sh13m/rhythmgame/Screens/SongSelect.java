@@ -3,20 +3,29 @@ package com.sh13m.rhythmgame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL30;
 import com.sh13m.rhythmgame.RhythmGame;
+import com.sh13m.rhythmgame.Tools.TextUtil;
 
 public class SongSelect implements Screen {
     private final RhythmGame game;
 
     private int selection;
+    private final String[] scores;
+    private final String[] names;
 
-    public SongSelect(RhythmGame game) {
+    public SongSelect(RhythmGame game, int level) {
         this.game = game;
-
         if (!this.game.menuTheme.isPlaying()) this.game.menuTheme.play();
 
-        selection = 1;
+
+        FileHandle scorefile = Gdx.files.internal("scores.txt");
+        scores = scorefile.readString().split("\\r?\\n");
+        FileHandle namefile = Gdx.files.internal("names.txt");
+        names = namefile.readString().split("\\r?\\n");
+
+        selection = level;
     }
 
     @Override
@@ -33,8 +42,8 @@ public class SongSelect implements Screen {
 
         game.batch.setProjectionMatrix(game.cam.combined);
         game.batch.begin();
+        drawSongs();
         game.smalltext.draw(game.batch, "SONG SELECT", 5, 20);
-        game.font.draw(game.batch, String.valueOf(selection), 40, 300);
         game.batch.end();
     }
 
@@ -66,6 +75,10 @@ public class SongSelect implements Screen {
     }
 
     private void drawSongs() {
+        game.font.getData().setScale(0.8f);
+        game.font.draw(game.batch, selection + ". " + names[selection-1], RhythmGame.V_WIDTH/2f - TextUtil.getTextWidth(game.font, selection + ". " + names[selection-1])/2f, 300);
+        game.font.getData().setScale(0.6f);
+        game.font.draw(game.batch, "HIGHSCORE: " + scores[selection-1], RhythmGame.V_WIDTH/2f - TextUtil.getTextWidth(game.font, "HIGHSCORE: " + scores[selection-1])/2f, 250);
 
     }
 
