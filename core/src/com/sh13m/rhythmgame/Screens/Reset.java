@@ -98,7 +98,7 @@ public class Reset implements Screen {
                 break;
             case 1:
                 clearData();
-                game.setScreen(new Menu(game));
+                game.setScreen(new ResetDone(game));
                 dispose();
                 break;
         }
